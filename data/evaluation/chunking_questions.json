@@ -1,0 +1,123 @@
+{
+  "_about": {
+    "purpose": "Conjunto de preguntas y evidencias oro para comparar estrategias de chunking.",
+    "input": "Preguntas PRL, fuente esperada, páginas válidas y frases verificadas en el corpus.",
+    "output": "Casos que consume evaluate_chunking.py para calcular métricas reproducibles.",
+    "flow_position": "Validación intermedia: ingesta -> configuraciones de chunking -> preguntas oro -> elección final."
+  },
+  "description": "Preguntas de referencia para comparar configuraciones de chunking sobre el corpus PRL.",
+  "questions": [
+    {
+      "id": "principios_accion_preventiva",
+      "question": "¿Cuáles son los tres primeros principios de la acción preventiva?",
+      "expected_source_id": "ley-31-1995-prl",
+      "expected_pages": [17],
+      "evidence_terms": [
+        "evitar los riesgos",
+        "evaluar los riesgos que no se puedan evitar",
+        "combatir los riesgos en su origen"
+      ]
+    },
+    {
+      "id": "peligro_grave_inminente",
+      "question": "¿Qué puede hacer un trabajador ante un peligro grave, inminente e inevitable?",
+      "expected_source_id": "ley-31-1995-prl",
+      "expected_pages": [19, 20],
+      "evidence_terms": [
+        "interrumpir su actividad",
+        "abandonar de inmediato el lugar de trabajo",
+        "no podrá exigirse a los trabajadores que reanuden su actividad"
+      ]
+    },
+    {
+      "id": "servicio_prevencion_propio",
+      "question": "¿Cuándo debe una empresa constituir un servicio de prevención propio según su plantilla y actividad?",
+      "expected_source_id": "rd-39-1997-servicios-prevencion",
+      "expected_pages": [11],
+      "evidence_terms": [
+        "más de 500 trabajadores",
+        "entre 250 y 500 trabajadores",
+        "actividades incluidas en el anexo I"
+      ]
+    },
+    {
+      "id": "plan_seguridad_obra",
+      "question": "¿Quién elabora y quién aprueba el plan de seguridad y salud de una obra?",
+      "expected_source_id": "rd-1627-1997-construccion",
+      "expected_pages": [7],
+      "evidence_terms": [
+        "plan de seguridad y salud en el trabajo",
+        "en aplicación del estudio de seguridad y salud",
+        "deberá ser aprobado"
+      ]
+    },
+    {
+      "id": "proteccion_caidas_altura",
+      "question": "¿Cómo deben protegerse las plataformas, andamios y pasarelas con riesgo de caída superior a dos metros?",
+      "expected_source_id": "guia-obras-construccion-2019",
+      "expected_pages": [90, 91],
+      "evidence_terms": [
+        "barandillas u otro sistema de protección colectiva",
+        "altura mínima de 90 centímetros",
+        "reborde de protección"
+      ]
+    },
+    {
+      "id": "eleccion_epi",
+      "question": "¿Qué actuaciones debe realizar el empresario para elegir los equipos de protección individual?",
+      "expected_source_id": "guia-epi-2022",
+      "expected_pages": [16],
+      "evidence_terms": [
+        "analizar y evaluar los riesgos existentes",
+        "definir las características que deberán reunir",
+        "comparar las características de los equipos de protección individual"
+      ]
+    },
+    {
+      "id": "comprobacion_equipos_trabajo",
+      "question": "¿Cuándo deben comprobarse los equipos de trabajo cuya seguridad depende de su instalación?",
+      "expected_source_id": "guia-equipos-trabajo-2021",
+      "expected_pages": [17, 18],
+      "evidence_terms": [
+        "comprobación inicial",
+        "después de cada montaje",
+        "personal competente"
+      ]
+    },
+    {
+      "id": "cinco_etapas_sin_tension",
+      "question": "¿Cuáles son las cinco etapas para dejar una instalación eléctrica sin tensión?",
+      "expected_source_id": "guia-riesgo-electrico-2020",
+      "expected_pages": [27],
+      "evidence_terms": [
+        "desconectar",
+        "prevenir cualquier posible realimentación",
+        "verificar la ausencia de tensión",
+        "poner a tierra y en cortocircuito",
+        "proteger frente a elementos próximos en tensión"
+      ]
+    },
+    {
+      "id": "colores_senalizacion",
+      "question": "¿Qué colores se emplean para prohibición, advertencia y situación de seguridad?",
+      "expected_source_id": "guia-senalizacion-2023",
+      "expected_pages": [18, 19],
+      "evidence_terms": [
+        "rojo",
+        "amarillo o amarillo anaranjado",
+        "verde"
+      ]
+    },
+    {
+      "id": "anchura_vias_circulacion",
+      "question": "¿Cuál es la anchura mínima de las puertas exteriores y los pasillos de los lugares de trabajo?",
+      "expected_source_id": "guia-lugares-trabajo-2015",
+      "expected_pages": [23],
+      "evidence_terms": [
+        "80 centímetros",
+        "1 metro",
+        "separación de seguridad suficiente"
+      ]
+    }
+  ]
+}
