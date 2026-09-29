@@ -1,3 +1,61 @@
+/* ── Lucide icons (static HTML) ───────────────────────────── */
+lucide.createIcons();
+
+/* ── Inline SVGs for dynamically created content ──────────── */
+const ICON = {
+  assistant: `<img src="/static/img/icon.png" alt="PRL Assistant" style="width:100%;height:100%;object-fit:contain;" />`,
+  file:      `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`,
+};
+
+/* ── Scroll reveal ────────────────────────────────────────── */
+(function initScrollReveal() {
+  const targets = document.querySelectorAll(
+    '.section-header, .feature-card, .step, .doc-card, .chat'
+  );
+
+  // Stagger children inside grid containers
+  document.querySelectorAll('.features__grid, .documents__grid, .steps__grid').forEach(grid => {
+    grid.querySelectorAll('.feature-card, .doc-card, .step').forEach((child, i) => {
+      child.style.transitionDelay = `${i * 75}ms`;
+    });
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  // Only hide and animate elements that start below the visible viewport.
+  // Elements already in view at load time stay visible to avoid a flash.
+  targets.forEach(el => {
+    if (el.getBoundingClientRect().top >= window.innerHeight) {
+      el.classList.add('scroll-reveal');
+      observer.observe(el);
+    }
+  });
+})();
+
+/* ── Hero video: replay when hero scrolls back into view ──── */
+const heroBanner = document.getElementById('heroBanner');
+if (heroBanner) {
+  heroBanner.addEventListener('ended', () => heroBanner.pause());
+
+  new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        heroBanner.currentTime = 0;
+        heroBanner.play();
+      } else {
+        heroBanner.pause();
+      }
+    });
+  }, { threshold: 0.25 }).observe(heroBanner.closest('.hero'));
+}
+
 const chatForm     = document.getElementById('chatForm');
 const chatInput    = document.getElementById('chatInput');
 const chatMessages = document.getElementById('chatMessages');
@@ -85,13 +143,13 @@ function appendMessage(role, text, sources = []) {
   const el = document.createElement('div');
   el.className = `message message--${role}`;
 
-  const avatarContent = role === 'user' ? 'Tú' : '🛡️';
+  const avatarContent = role === 'user' ? 'Tú' : ICON.assistant;
 
   const sourcesHTML = sources.length
     ? `<div class="message__sources">
         ${sources.map(s => `
           <span class="source-badge">
-            📄 ${escapeHTML(s.document)}${s.page ? ` · p.&nbsp;${s.page}` : ''}
+            ${ICON.file} ${escapeHTML(s.document)}${s.page ? ` · p.&nbsp;${s.page}` : ''}
           </span>`).join('')}
        </div>`
     : '';
@@ -114,7 +172,7 @@ function appendLoading() {
   el.className = 'message message--assistant';
   el.setAttribute('aria-label', 'El asistente está escribiendo');
   el.innerHTML = `
-    <div class="message__avatar" aria-hidden="true">🛡️</div>
+    <div class="message__avatar" aria-hidden="true">${ICON.assistant}</div>
     <div class="message__body">
       <div class="message__bubble">
         <div class="message__loading" aria-hidden="true">
