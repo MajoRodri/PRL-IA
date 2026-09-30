@@ -209,6 +209,19 @@ tempCodeRunnerFile.py
 # PyPI configuration file
 .pypirc
 
+# Corpus local: se versionan el manifiesto, el descargador y la evaluación,
+# pero se ignora cualquier documento presente o futuro dentro de data/raw
+# (PDF, TXT, Markdown u otros formatos de entrada).
+data/raw/*
+!data/raw/.gitkeep
+!data/raw/README.md
+
+# Esta documentación técnica sí forma parte del proyecto y debe versionarse.
+!docs/chunking.md
+
+# Archivos temporales usados para inspeccionar PDF.
+tmp/
+
 # Marimo
 marimo/_static/
 marimo/_lsp/
@@ -216,3 +229,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ChromaDB persistence
+chroma_db/
