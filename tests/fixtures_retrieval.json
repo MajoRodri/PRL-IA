@@ -1,0 +1,20 @@
+{
+  "description": "Corpus y referencias sintéticos para probar software. No son instrucciones de prevención.",
+  "chunks": [
+    {"chunk_id":"altura:1","document_id":"altura","text":"El documento demo de trabajos en altura remite al protocolo ALTURA-DEMO.","source":"altura_demo.txt","category":"altura"},
+    {"chunk_id":"electricidad:1","document_id":"electricidad","text":"La información sobre riesgos eléctricos está en ELECTRICO-DEMO.","source":"electricidad_demo.txt","category":"electricidad"},
+    {"chunk_id":"evacuacion:1","document_id":"evacuacion","text":"El plan de evacuación y emergencias remite al documento EMERGENCIA-DEMO.","source":"emergencia_demo.txt","category":"emergencias"},
+    {"chunk_id":"epi:1","document_id":"epi","text":"Los equipos de protección individual figuran en el catálogo EPI-DEMO.","source":"epi_demo.txt","category":"epi"},
+    {"chunk_id":"senal:1","document_id":"senal","text":"La señalización del centro aparece en el plano SENAL-DEMO.","source":"senal_demo.txt","category":"senalizacion"}
+  ],
+  "cases": [
+    {"id":"Q1","query":"trabajos en altura","relevant_ids":["altura:1"]},
+    {"id":"Q2","query":"riesgos eléctricos","relevant_ids":["electricidad:1"]},
+    {"id":"Q3","query":"plan de evacuación","relevant_ids":["evacuacion:1"]},
+    {"id":"Q4","query":"equipos de protección individual","relevant_ids":["epi:1"]},
+    {"id":"Q5","query":"señalización del centro","relevant_ids":["senal:1"],"filters":{"category":"senalizacion"}},
+    {"id":"Q6","query":"salida urgente del edificio","relevant_ids":["evacuacion:1"],"note":"Paráfrasis: caso difícil deliberado para la búsqueda léxica."},
+    {"id":"Q7","query":"salario vacaciones nómina","relevant_ids":[]},
+    {"id":"Q8","query":"menú cafetería","relevant_ids":[]}
+  ]
+}

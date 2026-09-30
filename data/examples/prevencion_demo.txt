@@ -1,0 +1,4 @@
+DOCUMENTO SINTÉTICO PARA PROBAR SOFTWARE. NO ES UN PROTOCOLO PRL.
+En este centro ficticio, la consulta sobre trabajos en altura remite al protocolo ALTURA-DEMO y a la revisión del responsable de prevención.
+La consulta sobre riesgos eléctricos remite al procedimiento ELECTRICO-DEMO y al personal autorizado del centro ficticio.
+La información de evacuación figura en el plan EMERGENCIA-DEMO del centro ficticio.
