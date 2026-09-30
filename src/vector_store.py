@@ -25,18 +25,21 @@ _embedding_function = embedding_functions.SentenceTransformerEmbeddingFunction(
 )
 
 
+_client = chromadb.PersistentClient(path=CHROMA_PERSIST_DIR)
+
+
 def get_client():
-    """Devuelve un cliente de ChromaDB con persistencia en disco."""
-    return chromadb.PersistentClient(path=CHROMA_PERSIST_DIR)
+    """Devuelve el cliente de ChromaDB (instancia única, creada al importar el módulo)."""
+    return _client
 
 
 def get_collection():
     """
     Obtiene la colección 'prl_documentos', creándola si no existe todavía.
-    Usa la función de embeddings de sentence-transformers configurada arriba.
+    Reutiliza el cliente único del módulo en lugar de abrir una conexión nueva
+    en cada llamada, evitando el coste de inicialización repetido.
     """
-    client = get_client()
-    collection = client.get_or_create_collection(
+    collection = _client.get_or_create_collection(
         name=COLLECTION_NAME,
         embedding_function=_embedding_function,
         metadata={"hnsw:space": "cosine"}
