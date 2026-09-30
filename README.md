@@ -97,6 +97,17 @@ cd "/mnt/c/Users/EVO/Desktop/BOOTCAMP/MODULO V/Proyecto PRL-IA/PRL-IA"
 python3 --version
 python3 -m venv .venv
 source .venv/bin/activate
+# Activar el entorno virtual
+source venv/bin/activate
+
+# Instalar PyTorch para CPU, sin dependencias CUDA
+python -m pip install "torch==2.14.0+cpu" --index-url https://download.pytorch.org/whl/cpu
+
+# Instalar las dependencias comunes del proyecto
+python -m pip install -r requirements.txt
+
+# Comprobar las dependencias
+python -m pip check
 python -m pip install -r requirements-persona5-lock.txt
 python -m pytest tests/test_retrieval.py tests/test_documents_api.py -q
 python -m uvicorn src.api_documents:create_app --factory --host 127.0.0.1 --port 8005
