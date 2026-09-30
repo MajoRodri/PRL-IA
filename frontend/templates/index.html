@@ -218,20 +218,31 @@
   </div>
 </section>
 
-<!-- ===================== CHAT ===================== -->
-<section class="chat-section section" id="chat">
-  <div class="container">
-    <div class="section-header">
-      <span class="label">CONSULTA</span>
-      <h2 class="section-title">¿En qué podemos ayudarte?</h2>
-      <p class="section-desc">Escribe tu pregunta sobre normativa de prevención de riesgos laborales.</p>
-    </div>
+<!-- ===================== FLOATING CHAT ===================== -->
+<div class="chat-widget" id="chatWidget" aria-hidden="true">
 
+  <div class="chat-popup" id="chatPopup" role="dialog" aria-label="Asistente PRL" aria-hidden="true">
     <div class="chat">
+
       <div class="chat__header">
         <img src="{{ url_for('static', path='img/icon.png') }}" alt="" class="chat__header-icon" aria-hidden="true" />
         <span class="chat__header-title">PRL Assistant</span>
         <span class="chat__status" title="En línea" aria-label="Estado: en línea"></span>
+        <button class="chat__expand" id="chatExpand" aria-label="Expandir chat">
+          <svg class="expand-icon expand-icon--expand" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/>
+            <line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>
+          </svg>
+          <svg class="expand-icon expand-icon--collapse" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/>
+            <line x1="10" y1="14" x2="3" y2="21"/><line x1="21" y1="3" x2="14" y2="10"/>
+          </svg>
+        </button>
+        <button class="chat__close" id="chatClose" aria-label="Cerrar asistente">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
       </div>
 
       <div class="chat__messages" id="chatMessages" role="log" aria-live="polite" aria-label="Conversación">
@@ -279,12 +290,22 @@
             <line x1="22" y1="2" x2="11" y2="13"/>
             <polygon points="22 2 15 22 11 13 2 9 22 2"/>
           </svg>
-          Enviar
+          <span class="chat__submit-label">Enviar</span>
         </button>
       </form>
-    </div>
 
+    </div>
   </div>
-</section>
+
+  <button class="chat-fab" id="chatFab" aria-label="Abrir asistente PRL" aria-expanded="false">
+    <svg class="chat-fab__icon chat-fab__icon--open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </svg>
+    <svg class="chat-fab__icon chat-fab__icon--close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+    </svg>
+  </button>
+
+</div>
 
 {% endblock %}

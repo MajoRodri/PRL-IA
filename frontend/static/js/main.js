@@ -61,12 +61,102 @@ const chatInput    = document.getElementById('chatInput');
 const chatMessages = document.getElementById('chatMessages');
 const fileUpload   = document.getElementById('fileUpload');
 
+const chatWidget = document.getElementById('chatWidget');
+const chatFab    = document.getElementById('chatFab');
+const chatPopup  = document.getElementById('chatPopup');
+const chatClose  = document.getElementById('chatClose');
+const chatExpand = document.getElementById('chatExpand');
+
+function openChat() {
+  chatFab.classList.add('is-open');
+  chatFab.setAttribute('aria-expanded', 'true');
+  chatPopup.classList.add('is-open');
+  chatPopup.setAttribute('aria-hidden', 'false');
+}
+
+function closeChat() {
+  chatFab.classList.remove('is-open');
+  chatFab.setAttribute('aria-expanded', 'false');
+  chatPopup.classList.remove('is-open', 'chat-popup--expanded');
+  chatPopup.setAttribute('aria-hidden', 'true');
+  chatWidget.classList.remove('is-expanded');
+  chatExpand?.setAttribute('aria-label', 'Expandir chat');
+}
+
+function collapseExpanded() {
+  chatPopup.classList.remove('chat-popup--expanded');
+  chatWidget.classList.remove('is-expanded');
+  chatExpand?.setAttribute('aria-label', 'Expandir chat');
+}
+
+/* Show widget once the hero is completely out of view (= white section visible) */
+let chatUserClosed = false;
+
+const heroSection = document.querySelector('.hero');
+if (heroSection) {
+  new IntersectionObserver((entries) => {
+    if (!entries[0].isIntersecting) {
+      chatWidget.classList.add('is-visible');
+      chatWidget.setAttribute('aria-hidden', 'false');
+      if (!chatUserClosed) openChat();
+    } else {
+      chatWidget.classList.remove('is-visible');
+      chatWidget.setAttribute('aria-hidden', 'true');
+      closeChat();
+      chatPopup.classList.remove('is-medium');
+      chatUserClosed = false;
+    }
+  }, { threshold: 0 }).observe(heroSection);
+}
+
+chatFab?.addEventListener('click', () => {
+  if (chatFab.classList.contains('is-open')) {
+    chatUserClosed = true;
+    closeChat();
+  } else {
+    chatUserClosed = false;
+    openChat();
+  }
+});
+
+chatClose?.addEventListener('click', () => {
+  chatUserClosed = true;
+  closeChat();
+});
+
+/* Input focus → medium state (sticky once triggered) */
+chatInput?.addEventListener('focus', () => {
+  if (!chatPopup.classList.contains('chat-popup--expanded')) {
+    chatPopup.classList.add('is-medium');
+  }
+});
+
+/* Expand button → full-screen centered overlay */
+chatExpand?.addEventListener('click', () => {
+  const isExpanded = chatPopup.classList.toggle('chat-popup--expanded');
+  chatWidget.classList.toggle('is-expanded', isExpanded);
+  chatExpand.setAttribute('aria-label', isExpanded ? 'Reducir chat' : 'Expandir chat');
+});
+
+/* Click on the dark overlay (outside the popup) → collapse */
+chatWidget?.addEventListener('click', (e) => {
+  if (e.target === chatWidget) collapseExpanded();
+});
+
+/* "Hacer una consulta" in hero → scroll past hero then open chat */
+document.querySelectorAll('a[href="#chat"]').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+    setTimeout(openChat, 500);
+  });
+});
+
 /* ── Suggestion pills ─────────────────────────────────────── */
 document.querySelectorAll('.chat__suggestion').forEach(btn => {
   btn.addEventListener('click', () => {
     chatInput.value = btn.textContent.trim();
-    chatInput.focus();
-    document.getElementById('chat').scrollIntoView({ behavior: 'smooth' });
+    openChat();
   });
 });
 
