@@ -104,3 +104,4 @@ yarl==1.25.1
 iniconfig==2.3.0
 pluggy==1.6.0
 starlette==1.7.0
+langchain-groq==1.1.3
