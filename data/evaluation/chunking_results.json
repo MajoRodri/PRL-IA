@@ -1,0 +1,1684 @@
+{
+  "_about": {
+    "purpose": "Resultados auditables de la comparación de estrategias de chunking.",
+    "input": "Corpus oficial y preguntas de referencia validadas.",
+    "output": "Métricas agregadas y resultados top-k por pregunta y configuración.",
+    "flow_position": "Salida de evaluación usada para elegir el chunking antes de generar embeddings."
+  },
+  "generated_at": "2026-09-29T15:55:40.724665+00:00",
+  "method": "Proxy léxico BM25 sobre el corpus local completo",
+  "limitations": [
+    "La recuperación léxica no equivale a la recuperación semántica con embeddings.",
+    "Las diez preguntas son una muestra dirigida y no representan todos los usos posibles.",
+    "Las páginas y frases esperadas se definieron manualmente a partir de las fuentes oficiales."
+  ],
+  "top_k": 5,
+  "source_count": 9,
+  "page_count": 750,
+  "question_count": 10,
+  "configurations": [
+    {
+      "configuration": "500/50",
+      "chunk_size": 500,
+      "chunk_overlap": 50,
+      "chunk_count": 7540,
+      "average_chunk_length": 411.17,
+      "indexed_character_ratio": 1.1188,
+      "gold_page_hit_at_k": 0.9,
+      "mean_reciprocal_rank": 0.7333,
+      "gold_precision_at_k": 0.3,
+      "evidence_recall_at_k": 0.5067,
+      "question_results": [
+        {
+          "question_id": "principios_accion_preventiva",
+          "gold_page_hit_at_k": false,
+          "first_gold_rank": null,
+          "reciprocal_rank": 0.0,
+          "gold_precision_at_k": 0.0,
+          "evidence_recall_at_k": 0.0,
+          "evidence_found": [],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 19.118708,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0041_c0397",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 41,
+              "length": 375
+            },
+            {
+              "rank": 2,
+              "score": 17.523065,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0041_c0396",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 41,
+              "length": 385
+            },
+            {
+              "rank": 3,
+              "score": 16.242434,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0039_c0369",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 39,
+              "length": 427
+            },
+            {
+              "rank": 4,
+              "score": 14.121859,
+              "chunk_id": "02_rd_39_1997_servicios_prevencion_consolidado_p0009_c0073",
+              "source_id": "rd-39-1997-servicios-prevencion",
+              "page": 9,
+              "length": 436
+            },
+            {
+              "rank": 5,
+              "score": 14.075943,
+              "chunk_id": "01_ley_31_1995_prl_consolidada_p0002_c0006",
+              "source_id": "ley-31-1995-prl",
+              "page": 2,
+              "length": 488
+            }
+          ]
+        },
+        {
+          "question_id": "peligro_grave_inminente",
+          "gold_page_hit_at_k": true,
+          "first_gold_rank": 1,
+          "reciprocal_rank": 1.0,
+          "gold_precision_at_k": 0.6,
+          "evidence_recall_at_k": 1.0,
+          "evidence_found": [
+            "interrumpir su actividad",
+            "abandonar de inmediato el lugar de trabajo",
+            "no podrá exigirse a los trabajadores que reanuden su actividad"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 21.12249,
+              "chunk_id": "01_ley_31_1995_prl_consolidada_p0019_c0182",
+              "source_id": "ley-31-1995-prl",
+              "page": 19,
+              "length": 492
+            },
+            {
+              "rank": 2,
+              "score": 17.480086,
+              "chunk_id": "01_ley_31_1995_prl_consolidada_p0019_c0183",
+              "source_id": "ley-31-1995-prl",
+              "page": 19,
+              "length": 386
+            },
+            {
+              "rank": 3,
+              "score": 16.223682,
+              "chunk_id": "01_ley_31_1995_prl_consolidada_p0020_c0184",
+              "source_id": "ley-31-1995-prl",
+              "page": 20,
+              "length": 441
+            },
+            {
+              "rank": 4,
+              "score": 16.031633,
+              "chunk_id": "07_guia_tecnica_riesgo_electrico_2020_p0021_c0203",
+              "source_id": "guia-riesgo-electrico-2020",
+              "page": 21,
+              "length": 430
+            },
+            {
+              "rank": 5,
+              "score": 15.893647,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0051_c0504",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 51,
+              "length": 337
+            }
+          ]
+        },
+        {
+          "question_id": "servicio_prevencion_propio",
+          "gold_page_hit_at_k": true,
+          "first_gold_rank": 2,
+          "reciprocal_rank": 0.5,
+          "gold_precision_at_k": 0.4,
+          "evidence_recall_at_k": 0.3333333333333333,
+          "evidence_found": [
+            "más de 500 trabajadores"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 22.396588,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0112_c1128",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 112,
+              "length": 387
+            },
+            {
+              "rank": 2,
+              "score": 22.250871,
+              "chunk_id": "02_rd_39_1997_servicios_prevencion_consolidado_p0011_c0086",
+              "source_id": "rd-39-1997-servicios-prevencion",
+              "page": 11,
+              "length": 436
+            },
+            {
+              "rank": 3,
+              "score": 21.811921,
+              "chunk_id": "02_rd_39_1997_servicios_prevencion_consolidado_p0012_c0101",
+              "source_id": "rd-39-1997-servicios-prevencion",
+              "page": 12,
+              "length": 473
+            },
+            {
+              "rank": 4,
+              "score": 19.332036,
+              "chunk_id": "02_rd_39_1997_servicios_prevencion_consolidado_p0012_c0100",
+              "source_id": "rd-39-1997-servicios-prevencion",
+              "page": 12,
+              "length": 465
+            },
+            {
+              "rank": 5,
+              "score": 19.051955,
+              "chunk_id": "02_rd_39_1997_servicios_prevencion_consolidado_p0011_c0091",
+              "source_id": "rd-39-1997-servicios-prevencion",
+              "page": 11,
+              "length": 323
+            }
+          ]
+        },
+        {
+          "question_id": "plan_seguridad_obra",
+          "gold_page_hit_at_k": true,
+          "first_gold_rank": 1,
+          "reciprocal_rank": 1.0,
+          "gold_precision_at_k": 0.2,
+          "evidence_recall_at_k": 0.3333333333333333,
+          "evidence_found": [
+            "plan de seguridad y salud en el trabajo"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 15.56901,
+              "chunk_id": "03_rd_1627_1997_obras_construccion_consolidado_p0007_c0064",
+              "source_id": "rd-1627-1997-construccion",
+              "page": 7,
+              "length": 465
+            },
+            {
+              "rank": 2,
+              "score": 14.899405,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0134_c1384",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 134,
+              "length": 481
+            },
+            {
+              "rank": 3,
+              "score": 14.884043,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0134_c1385",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 134,
+              "length": 387
+            },
+            {
+              "rank": 4,
+              "score": 14.884043,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0138_c1406",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 138,
+              "length": 387
+            },
+            {
+              "rank": 5,
+              "score": 14.347538,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0136_c1395",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 136,
+              "length": 373
+            }
+          ]
+        },
+        {
+          "question_id": "proteccion_caidas_altura",
+          "gold_page_hit_at_k": true,
+          "first_gold_rank": 3,
+          "reciprocal_rank": 0.3333333333333333,
+          "gold_precision_at_k": 0.2,
+          "evidence_recall_at_k": 0.0,
+          "evidence_found": [],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 22.78835,
+              "chunk_id": "06_guia_tecnica_equipos_trabajo_2021_p0107_c1254",
+              "source_id": "guia-equipos-trabajo-2021",
+              "page": 107,
+              "length": 357
+            },
+            {
+              "rank": 2,
+              "score": 20.771538,
+              "chunk_id": "03_rd_1627_1997_obras_construccion_consolidado_p0019_c0183",
+              "source_id": "rd-1627-1997-construccion",
+              "page": 19,
+              "length": 305
+            },
+            {
+              "rank": 3,
+              "score": 19.562279,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0090_c0875",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 90,
+              "length": 439
+            },
+            {
+              "rank": 4,
+              "score": 17.540482,
+              "chunk_id": "06_guia_tecnica_equipos_trabajo_2021_p0033_c0354",
+              "source_id": "guia-equipos-trabajo-2021",
+              "page": 33,
+              "length": 471
+            },
+            {
+              "rank": 5,
+              "score": 17.046481,
+              "chunk_id": "09_guia_tecnica_lugares_trabajo_2015_p0020_c0162",
+              "source_id": "guia-lugares-trabajo-2015",
+              "page": 20,
+              "length": 337
+            }
+          ]
+        },
+        {
+          "question_id": "eleccion_epi",
+          "gold_page_hit_at_k": true,
+          "first_gold_rank": 2,
+          "reciprocal_rank": 0.5,
+          "gold_precision_at_k": 0.2,
+          "evidence_recall_at_k": 0.6666666666666666,
+          "evidence_found": [
+            "analizar y evaluar los riesgos existentes",
+            "definir las características que deberán reunir"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 24.501311,
+              "chunk_id": "05_guia_tecnica_epi_2022_p0017_c0148",
+              "source_id": "guia-epi-2022",
+              "page": 17,
+              "length": 383
+            },
+            {
+              "rank": 2,
+              "score": 17.311838,
+              "chunk_id": "05_guia_tecnica_epi_2022_p0016_c0146",
+              "source_id": "guia-epi-2022",
+              "page": 16,
+              "length": 444
+            },
+            {
+              "rank": 3,
+              "score": 15.722637,
+              "chunk_id": "05_guia_tecnica_epi_2022_p0005_c0012",
+              "source_id": "guia-epi-2022",
+              "page": 5,
+              "length": 418
+            },
+            {
+              "rank": 4,
+              "score": 14.740236,
+              "chunk_id": "03_rd_1627_1997_obras_construccion_consolidado_p0009_c0087",
+              "source_id": "rd-1627-1997-construccion",
+              "page": 9,
+              "length": 389
+            },
+            {
+              "rank": 5,
+              "score": 14.322399,
+              "chunk_id": "05_guia_tecnica_epi_2022_p0012_c0088",
+              "source_id": "guia-epi-2022",
+              "page": 12,
+              "length": 309
+            }
+          ]
+        },
+        {
+          "question_id": "comprobacion_equipos_trabajo",
+          "gold_page_hit_at_k": true,
+          "first_gold_rank": 1,
+          "reciprocal_rank": 1.0,
+          "gold_precision_at_k": 0.4,
+          "evidence_recall_at_k": 0.6666666666666666,
+          "evidence_found": [
+            "comprobación inicial",
+            "después de cada montaje"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 16.796477,
+              "chunk_id": "06_guia_tecnica_equipos_trabajo_2021_p0017_c0157",
+              "source_id": "guia-equipos-trabajo-2021",
+              "page": 17,
+              "length": 447
+            },
+            {
+              "rank": 2,
+              "score": 14.856736,
+              "chunk_id": "06_guia_tecnica_equipos_trabajo_2021_p0017_c0156",
+              "source_id": "guia-equipos-trabajo-2021",
+              "page": 17,
+              "length": 369
+            },
+            {
+              "rank": 3,
+              "score": 11.996031,
+              "chunk_id": "09_guia_tecnica_lugares_trabajo_2015_p0082_c0767",
+              "source_id": "guia-lugares-trabajo-2015",
+              "page": 82,
+              "length": 444
+            },
+            {
+              "rank": 4,
+              "score": 11.516489,
+              "chunk_id": "06_guia_tecnica_equipos_trabajo_2021_p0174_c1963",
+              "source_id": "guia-equipos-trabajo-2021",
+              "page": 174,
+              "length": 499
+            },
+            {
+              "rank": 5,
+              "score": 11.318342,
+              "chunk_id": "06_guia_tecnica_equipos_trabajo_2021_p0071_c0833",
+              "source_id": "guia-equipos-trabajo-2021",
+              "page": 71,
+              "length": 494
+            }
+          ]
+        },
+        {
+          "question_id": "cinco_etapas_sin_tension",
+          "gold_page_hit_at_k": true,
+          "first_gold_rank": 1,
+          "reciprocal_rank": 1.0,
+          "gold_precision_at_k": 0.4,
+          "evidence_recall_at_k": 0.4,
+          "evidence_found": [
+            "poner a tierra y en cortocircuito",
+            "proteger frente a elementos próximos en tensión"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 22.458619,
+              "chunk_id": "07_guia_tecnica_riesgo_electrico_2020_p0027_c0259",
+              "source_id": "guia-riesgo-electrico-2020",
+              "page": 27,
+              "length": 494
+            },
+            {
+              "rank": 2,
+              "score": 21.031381,
+              "chunk_id": "07_guia_tecnica_riesgo_electrico_2020_p0027_c0256",
+              "source_id": "guia-riesgo-electrico-2020",
+              "page": 27,
+              "length": 361
+            },
+            {
+              "rank": 3,
+              "score": 20.077189,
+              "chunk_id": "07_guia_tecnica_riesgo_electrico_2020_p0014_c0123",
+              "source_id": "guia-riesgo-electrico-2020",
+              "page": 14,
+              "length": 326
+            },
+            {
+              "rank": 4,
+              "score": 18.394289,
+              "chunk_id": "07_guia_tecnica_riesgo_electrico_2020_p0046_c0449",
+              "source_id": "guia-riesgo-electrico-2020",
+              "page": 46,
+              "length": 415
+            },
+            {
+              "rank": 5,
+              "score": 18.088887,
+              "chunk_id": "07_guia_tecnica_riesgo_electrico_2020_p0013_c0109",
+              "source_id": "guia-riesgo-electrico-2020",
+              "page": 13,
+              "length": 485
+            }
+          ]
+        },
+        {
+          "question_id": "colores_senalizacion",
+          "gold_page_hit_at_k": true,
+          "first_gold_rank": 1,
+          "reciprocal_rank": 1.0,
+          "gold_precision_at_k": 0.4,
+          "evidence_recall_at_k": 1.0,
+          "evidence_found": [
+            "rojo",
+            "amarillo o amarillo anaranjado",
+            "verde"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 17.453709,
+              "chunk_id": "08_guia_tecnica_senalizacion_2023_p0019_c0137",
+              "source_id": "guia-senalizacion-2023",
+              "page": 19,
+              "length": 389
+            },
+            {
+              "rank": 2,
+              "score": 15.995458,
+              "chunk_id": "08_guia_tecnica_senalizacion_2023_p0018_c0130",
+              "source_id": "guia-senalizacion-2023",
+              "page": 18,
+              "length": 479
+            },
+            {
+              "rank": 3,
+              "score": 14.663024,
+              "chunk_id": "08_guia_tecnica_senalizacion_2023_p0009_c0050",
+              "source_id": "guia-senalizacion-2023",
+              "page": 9,
+              "length": 497
+            },
+            {
+              "rank": 4,
+              "score": 13.732337,
+              "chunk_id": "08_guia_tecnica_senalizacion_2023_p0024_c0171",
+              "source_id": "guia-senalizacion-2023",
+              "page": 24,
+              "length": 492
+            },
+            {
+              "rank": 5,
+              "score": 13.251321,
+              "chunk_id": "08_guia_tecnica_senalizacion_2023_p0042_c0335",
+              "source_id": "guia-senalizacion-2023",
+              "page": 42,
+              "length": 429
+            }
+          ]
+        },
+        {
+          "question_id": "anchura_vias_circulacion",
+          "gold_page_hit_at_k": true,
+          "first_gold_rank": 1,
+          "reciprocal_rank": 1.0,
+          "gold_precision_at_k": 0.2,
+          "evidence_recall_at_k": 0.6666666666666666,
+          "evidence_found": [
+            "80 centímetros",
+            "1 metro"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 30.373626,
+              "chunk_id": "09_guia_tecnica_lugares_trabajo_2015_p0023_c0195",
+              "source_id": "guia-lugares-trabajo-2015",
+              "page": 23,
+              "length": 407
+            },
+            {
+              "rank": 2,
+              "score": 15.747522,
+              "chunk_id": "09_guia_tecnica_lugares_trabajo_2015_p0024_c0197",
+              "source_id": "guia-lugares-trabajo-2015",
+              "page": 24,
+              "length": 376
+            },
+            {
+              "rank": 3,
+              "score": 14.085833,
+              "chunk_id": "09_guia_tecnica_lugares_trabajo_2015_p0022_c0177",
+              "source_id": "guia-lugares-trabajo-2015",
+              "page": 22,
+              "length": 481
+            },
+            {
+              "rank": 4,
+              "score": 13.460132,
+              "chunk_id": "09_guia_tecnica_lugares_trabajo_2015_p0038_c0316",
+              "source_id": "guia-lugares-trabajo-2015",
+              "page": 38,
+              "length": 436
+            },
+            {
+              "rank": 5,
+              "score": 13.425617,
+              "chunk_id": "09_guia_tecnica_lugares_trabajo_2015_p0054_c0485",
+              "source_id": "guia-lugares-trabajo-2015",
+              "page": 54,
+              "length": 421
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "configuration": "800/120",
+      "chunk_size": 800,
+      "chunk_overlap": 120,
+      "chunk_count": 4956,
+      "average_chunk_length": 659.62,
+      "indexed_character_ratio": 1.1797,
+      "gold_page_hit_at_k": 0.9,
+      "mean_reciprocal_rank": 0.7,
+      "gold_precision_at_k": 0.3,
+      "evidence_recall_at_k": 0.7,
+      "question_results": [
+        {
+          "question_id": "principios_accion_preventiva",
+          "gold_page_hit_at_k": false,
+          "first_gold_rank": null,
+          "reciprocal_rank": 0.0,
+          "gold_precision_at_k": 0.0,
+          "evidence_recall_at_k": 0.0,
+          "evidence_found": [],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 16.691041,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0041_c0264",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 41,
+              "length": 676
+            },
+            {
+              "rank": 2,
+              "score": 15.307794,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0045_c0294",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 45,
+              "length": 677
+            },
+            {
+              "rank": 3,
+              "score": 14.46766,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0039_c0247",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 39,
+              "length": 794
+            },
+            {
+              "rank": 4,
+              "score": 13.892452,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0039_c0248",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 39,
+              "length": 793
+            },
+            {
+              "rank": 5,
+              "score": 13.010142,
+              "chunk_id": "01_ley_31_1995_prl_consolidada_p0016_c0104",
+              "source_id": "ley-31-1995-prl",
+              "page": 16,
+              "length": 536
+            }
+          ]
+        },
+        {
+          "question_id": "peligro_grave_inminente",
+          "gold_page_hit_at_k": true,
+          "first_gold_rank": 1,
+          "reciprocal_rank": 1.0,
+          "gold_precision_at_k": 0.6,
+          "evidence_recall_at_k": 1.0,
+          "evidence_found": [
+            "interrumpir su actividad",
+            "abandonar de inmediato el lugar de trabajo",
+            "no podrá exigirse a los trabajadores que reanuden su actividad"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 22.375289,
+              "chunk_id": "01_ley_31_1995_prl_consolidada_p0019_c0125",
+              "source_id": "ley-31-1995-prl",
+              "page": 19,
+              "length": 753
+            },
+            {
+              "rank": 2,
+              "score": 21.284407,
+              "chunk_id": "07_guia_tecnica_riesgo_electrico_2020_p0021_c0130",
+              "source_id": "guia-riesgo-electrico-2020",
+              "page": 21,
+              "length": 221
+            },
+            {
+              "rank": 3,
+              "score": 18.820625,
+              "chunk_id": "01_ley_31_1995_prl_consolidada_p0019_c0126",
+              "source_id": "ley-31-1995-prl",
+              "page": 19,
+              "length": 368
+            },
+            {
+              "rank": 4,
+              "score": 16.58135,
+              "chunk_id": "01_ley_31_1995_prl_consolidada_p0020_c0127",
+              "source_id": "ley-31-1995-prl",
+              "page": 20,
+              "length": 528
+            },
+            {
+              "rank": 5,
+              "score": 15.984168,
+              "chunk_id": "09_guia_tecnica_lugares_trabajo_2015_p0018_c0095",
+              "source_id": "guia-lugares-trabajo-2015",
+              "page": 18,
+              "length": 593
+            }
+          ]
+        },
+        {
+          "question_id": "servicio_prevencion_propio",
+          "gold_page_hit_at_k": true,
+          "first_gold_rank": 2,
+          "reciprocal_rank": 0.5,
+          "gold_precision_at_k": 0.4,
+          "evidence_recall_at_k": 0.3333333333333333,
+          "evidence_found": [
+            "más de 500 trabajadores"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 21.963257,
+              "chunk_id": "02_rd_39_1997_servicios_prevencion_consolidado_p0012_c0066",
+              "source_id": "rd-39-1997-servicios-prevencion",
+              "page": 12,
+              "length": 683
+            },
+            {
+              "rank": 2,
+              "score": 20.920892,
+              "chunk_id": "02_rd_39_1997_servicios_prevencion_consolidado_p0011_c0057",
+              "source_id": "rd-39-1997-servicios-prevencion",
+              "page": 11,
+              "length": 739
+            },
+            {
+              "rank": 3,
+              "score": 19.309599,
+              "chunk_id": "02_rd_39_1997_servicios_prevencion_consolidado_p0011_c0060",
+              "source_id": "rd-39-1997-servicios-prevencion",
+              "page": 11,
+              "length": 515
+            },
+            {
+              "rank": 4,
+              "score": 18.823176,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0112_c0744",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 112,
+              "length": 731
+            },
+            {
+              "rank": 5,
+              "score": 17.91446,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0112_c0745",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 112,
+              "length": 766
+            }
+          ]
+        },
+        {
+          "question_id": "plan_seguridad_obra",
+          "gold_page_hit_at_k": true,
+          "first_gold_rank": 2,
+          "reciprocal_rank": 0.5,
+          "gold_precision_at_k": 0.2,
+          "evidence_recall_at_k": 0.3333333333333333,
+          "evidence_found": [
+            "plan de seguridad y salud en el trabajo"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 15.835206,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0136_c0917",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 136,
+              "length": 779
+            },
+            {
+              "rank": 2,
+              "score": 15.211831,
+              "chunk_id": "03_rd_1627_1997_obras_construccion_consolidado_p0007_c0041",
+              "source_id": "rd-1627-1997-construccion",
+              "page": 7,
+              "length": 535
+            },
+            {
+              "rank": 3,
+              "score": 14.601553,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0134_c0910",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 134,
+              "length": 740
+            },
+            {
+              "rank": 4,
+              "score": 14.267304,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0138_c0923",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 138,
+              "length": 760
+            },
+            {
+              "rank": 5,
+              "score": 14.026507,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0136_c0916",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 136,
+              "length": 750
+            }
+          ]
+        },
+        {
+          "question_id": "proteccion_caidas_altura",
+          "gold_page_hit_at_k": true,
+          "first_gold_rank": 2,
+          "reciprocal_rank": 0.5,
+          "gold_precision_at_k": 0.2,
+          "evidence_recall_at_k": 1.0,
+          "evidence_found": [
+            "barandillas u otro sistema de protección colectiva",
+            "altura mínima de 90 centímetros",
+            "reborde de protección"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 27.354084,
+              "chunk_id": "03_rd_1627_1997_obras_construccion_consolidado_p0019_c0118",
+              "source_id": "rd-1627-1997-construccion",
+              "page": 19,
+              "length": 625
+            },
+            {
+              "rank": 2,
+              "score": 26.882364,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0090_c0579",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 90,
+              "length": 763
+            },
+            {
+              "rank": 3,
+              "score": 21.475946,
+              "chunk_id": "03_rd_1627_1997_obras_construccion_consolidado_p0020_c0120",
+              "source_id": "rd-1627-1997-construccion",
+              "page": 20,
+              "length": 653
+            },
+            {
+              "rank": 4,
+              "score": 21.287463,
+              "chunk_id": "06_guia_tecnica_equipos_trabajo_2021_p0107_c0832",
+              "source_id": "guia-equipos-trabajo-2021",
+              "page": 107,
+              "length": 767
+            },
+            {
+              "rank": 5,
+              "score": 20.061865,
+              "chunk_id": "09_guia_tecnica_lugares_trabajo_2015_p0020_c0111",
+              "source_id": "guia-lugares-trabajo-2015",
+              "page": 20,
+              "length": 780
+            }
+          ]
+        },
+        {
+          "question_id": "eleccion_epi",
+          "gold_page_hit_at_k": true,
+          "first_gold_rank": 2,
+          "reciprocal_rank": 0.5,
+          "gold_precision_at_k": 0.2,
+          "evidence_recall_at_k": 0.6666666666666666,
+          "evidence_found": [
+            "analizar y evaluar los riesgos existentes",
+            "definir las características que deberán reunir"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 21.41226,
+              "chunk_id": "05_guia_tecnica_epi_2022_p0017_c0100",
+              "source_id": "guia-epi-2022",
+              "page": 17,
+              "length": 795
+            },
+            {
+              "rank": 2,
+              "score": 18.39093,
+              "chunk_id": "05_guia_tecnica_epi_2022_p0016_c0098",
+              "source_id": "guia-epi-2022",
+              "page": 16,
+              "length": 626
+            },
+            {
+              "rank": 3,
+              "score": 14.953828,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0048_c0319",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 48,
+              "length": 766
+            },
+            {
+              "rank": 4,
+              "score": 14.015402,
+              "chunk_id": "05_guia_tecnica_epi_2022_p0005_c0008",
+              "source_id": "guia-epi-2022",
+              "page": 5,
+              "length": 778
+            },
+            {
+              "rank": 5,
+              "score": 14.003098,
+              "chunk_id": "03_rd_1627_1997_obras_construccion_consolidado_p0009_c0057",
+              "source_id": "rd-1627-1997-construccion",
+              "page": 9,
+              "length": 722
+            }
+          ]
+        },
+        {
+          "question_id": "comprobacion_equipos_trabajo",
+          "gold_page_hit_at_k": true,
+          "first_gold_rank": 1,
+          "reciprocal_rank": 1.0,
+          "gold_precision_at_k": 0.4,
+          "evidence_recall_at_k": 0.6666666666666666,
+          "evidence_found": [
+            "comprobación inicial",
+            "después de cada montaje"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 16.703057,
+              "chunk_id": "06_guia_tecnica_equipos_trabajo_2021_p0017_c0106",
+              "source_id": "guia-equipos-trabajo-2021",
+              "page": 17,
+              "length": 741
+            },
+            {
+              "rank": 2,
+              "score": 13.038796,
+              "chunk_id": "06_guia_tecnica_equipos_trabajo_2021_p0017_c0105",
+              "source_id": "guia-equipos-trabajo-2021",
+              "page": 17,
+              "length": 617
+            },
+            {
+              "rank": 3,
+              "score": 11.744099,
+              "chunk_id": "06_guia_tecnica_equipos_trabajo_2021_p0174_c1290",
+              "source_id": "guia-equipos-trabajo-2021",
+              "page": 174,
+              "length": 792
+            },
+            {
+              "rank": 4,
+              "score": 11.353887,
+              "chunk_id": "09_guia_tecnica_lugares_trabajo_2015_p0082_c0500",
+              "source_id": "guia-lugares-trabajo-2015",
+              "page": 82,
+              "length": 596
+            },
+            {
+              "rank": 5,
+              "score": 11.043874,
+              "chunk_id": "07_guia_tecnica_riesgo_electrico_2020_p0032_c0195",
+              "source_id": "guia-riesgo-electrico-2020",
+              "page": 32,
+              "length": 443
+            }
+          ]
+        },
+        {
+          "question_id": "cinco_etapas_sin_tension",
+          "gold_page_hit_at_k": true,
+          "first_gold_rank": 1,
+          "reciprocal_rank": 1.0,
+          "gold_precision_at_k": 0.4,
+          "evidence_recall_at_k": 1.0,
+          "evidence_found": [
+            "desconectar",
+            "prevenir cualquier posible realimentación",
+            "verificar la ausencia de tensión",
+            "poner a tierra y en cortocircuito",
+            "proteger frente a elementos próximos en tensión"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 23.649096,
+              "chunk_id": "07_guia_tecnica_riesgo_electrico_2020_p0027_c0163",
+              "source_id": "guia-riesgo-electrico-2020",
+              "page": 27,
+              "length": 765
+            },
+            {
+              "rank": 2,
+              "score": 22.422754,
+              "chunk_id": "07_guia_tecnica_riesgo_electrico_2020_p0027_c0165",
+              "source_id": "guia-riesgo-electrico-2020",
+              "page": 27,
+              "length": 729
+            },
+            {
+              "rank": 3,
+              "score": 19.009603,
+              "chunk_id": "07_guia_tecnica_riesgo_electrico_2020_p0013_c0068",
+              "source_id": "guia-riesgo-electrico-2020",
+              "page": 13,
+              "length": 761
+            },
+            {
+              "rank": 4,
+              "score": 17.124177,
+              "chunk_id": "07_guia_tecnica_riesgo_electrico_2020_p0014_c0077",
+              "source_id": "guia-riesgo-electrico-2020",
+              "page": 14,
+              "length": 779
+            },
+            {
+              "rank": 5,
+              "score": 16.948096,
+              "chunk_id": "07_guia_tecnica_riesgo_electrico_2020_p0046_c0286",
+              "source_id": "guia-riesgo-electrico-2020",
+              "page": 46,
+              "length": 755
+            }
+          ]
+        },
+        {
+          "question_id": "colores_senalizacion",
+          "gold_page_hit_at_k": true,
+          "first_gold_rank": 1,
+          "reciprocal_rank": 1.0,
+          "gold_precision_at_k": 0.4,
+          "evidence_recall_at_k": 1.0,
+          "evidence_found": [
+            "rojo",
+            "amarillo o amarillo anaranjado",
+            "verde"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 17.244238,
+              "chunk_id": "08_guia_tecnica_senalizacion_2023_p0018_c0087",
+              "source_id": "guia-senalizacion-2023",
+              "page": 18,
+              "length": 710
+            },
+            {
+              "rank": 2,
+              "score": 15.689899,
+              "chunk_id": "08_guia_tecnica_senalizacion_2023_p0024_c0114",
+              "source_id": "guia-senalizacion-2023",
+              "page": 24,
+              "length": 475
+            },
+            {
+              "rank": 3,
+              "score": 15.579737,
+              "chunk_id": "08_guia_tecnica_senalizacion_2023_p0019_c0091",
+              "source_id": "guia-senalizacion-2023",
+              "page": 19,
+              "length": 765
+            },
+            {
+              "rank": 4,
+              "score": 14.141978,
+              "chunk_id": "08_guia_tecnica_senalizacion_2023_p0009_c0034",
+              "source_id": "guia-senalizacion-2023",
+              "page": 9,
+              "length": 647
+            },
+            {
+              "rank": 5,
+              "score": 13.130242,
+              "chunk_id": "08_guia_tecnica_senalizacion_2023_p0020_c0097",
+              "source_id": "guia-senalizacion-2023",
+              "page": 20,
+              "length": 624
+            }
+          ]
+        },
+        {
+          "question_id": "anchura_vias_circulacion",
+          "gold_page_hit_at_k": true,
+          "first_gold_rank": 1,
+          "reciprocal_rank": 1.0,
+          "gold_precision_at_k": 0.2,
+          "evidence_recall_at_k": 1.0,
+          "evidence_found": [
+            "80 centímetros",
+            "1 metro",
+            "separación de seguridad suficiente"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 28.559899,
+              "chunk_id": "09_guia_tecnica_lugares_trabajo_2015_p0023_c0132",
+              "source_id": "guia-lugares-trabajo-2015",
+              "page": 23,
+              "length": 596
+            },
+            {
+              "rank": 2,
+              "score": 15.249631,
+              "chunk_id": "09_guia_tecnica_lugares_trabajo_2015_p0038_c0210",
+              "source_id": "guia-lugares-trabajo-2015",
+              "page": 38,
+              "length": 678
+            },
+            {
+              "rank": 3,
+              "score": 15.211458,
+              "chunk_id": "09_guia_tecnica_lugares_trabajo_2015_p0022_c0121",
+              "source_id": "guia-lugares-trabajo-2015",
+              "page": 22,
+              "length": 499
+            },
+            {
+              "rank": 4,
+              "score": 14.901244,
+              "chunk_id": "09_guia_tecnica_lugares_trabajo_2015_p0038_c0209",
+              "source_id": "guia-lugares-trabajo-2015",
+              "page": 38,
+              "length": 767
+            },
+            {
+              "rank": 5,
+              "score": 14.646626,
+              "chunk_id": "09_guia_tecnica_lugares_trabajo_2015_p0054_c0320",
+              "source_id": "guia-lugares-trabajo-2015",
+              "page": 54,
+              "length": 798
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "configuration": "1000/200",
+      "chunk_size": 1000,
+      "chunk_overlap": 200,
+      "chunk_count": 4170,
+      "average_chunk_length": 827.21,
+      "indexed_character_ratio": 1.2448,
+      "gold_page_hit_at_k": 0.9,
+      "mean_reciprocal_rank": 0.6833,
+      "gold_precision_at_k": 0.34,
+      "evidence_recall_at_k": 0.8,
+      "question_results": [
+        {
+          "question_id": "principios_accion_preventiva",
+          "gold_page_hit_at_k": false,
+          "first_gold_rank": null,
+          "reciprocal_rank": 0.0,
+          "gold_precision_at_k": 0.0,
+          "evidence_recall_at_k": 0.0,
+          "evidence_found": [],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 17.485292,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0041_c0217",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 41,
+              "length": 861
+            },
+            {
+              "rank": 2,
+              "score": 14.762854,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0045_c0243",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 45,
+              "length": 768
+            },
+            {
+              "rank": 3,
+              "score": 14.706798,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0039_c0202",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 39,
+              "length": 794
+            },
+            {
+              "rank": 4,
+              "score": 13.934014,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0039_c0203",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 39,
+              "length": 931
+            },
+            {
+              "rank": 5,
+              "score": 12.449705,
+              "chunk_id": "02_rd_39_1997_servicios_prevencion_consolidado_p0009_c0040",
+              "source_id": "rd-39-1997-servicios-prevencion",
+              "page": 9,
+              "length": 902
+            }
+          ]
+        },
+        {
+          "question_id": "peligro_grave_inminente",
+          "gold_page_hit_at_k": true,
+          "first_gold_rank": 1,
+          "reciprocal_rank": 1.0,
+          "gold_precision_at_k": 0.4,
+          "evidence_recall_at_k": 1.0,
+          "evidence_found": [
+            "interrumpir su actividad",
+            "abandonar de inmediato el lugar de trabajo",
+            "no podrá exigirse a los trabajadores que reanuden su actividad"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 26.190817,
+              "chunk_id": "01_ley_31_1995_prl_consolidada_p0019_c0103",
+              "source_id": "ley-31-1995-prl",
+              "page": 19,
+              "length": 833
+            },
+            {
+              "rank": 2,
+              "score": 19.088891,
+              "chunk_id": "01_ley_31_1995_prl_consolidada_p0019_c0104",
+              "source_id": "ley-31-1995-prl",
+              "page": 19,
+              "length": 448
+            },
+            {
+              "rank": 3,
+              "score": 15.56205,
+              "chunk_id": "07_guia_tecnica_riesgo_electrico_2020_p0022_c0113",
+              "source_id": "guia-riesgo-electrico-2020",
+              "page": 22,
+              "length": 745
+            },
+            {
+              "rank": 4,
+              "score": 15.090403,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0051_c0280",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 51,
+              "length": 841
+            },
+            {
+              "rank": 5,
+              "score": 14.923938,
+              "chunk_id": "09_guia_tecnica_lugares_trabajo_2015_p0018_c0076",
+              "source_id": "guia-lugares-trabajo-2015",
+              "page": 18,
+              "length": 922
+            }
+          ]
+        },
+        {
+          "question_id": "servicio_prevencion_propio",
+          "gold_page_hit_at_k": true,
+          "first_gold_rank": 3,
+          "reciprocal_rank": 0.3333333333333333,
+          "gold_precision_at_k": 0.4,
+          "evidence_recall_at_k": 1.0,
+          "evidence_found": [
+            "más de 500 trabajadores",
+            "entre 250 y 500 trabajadores",
+            "actividades incluidas en el anexo I"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 21.571614,
+              "chunk_id": "02_rd_39_1997_servicios_prevencion_consolidado_p0012_c0055",
+              "source_id": "rd-39-1997-servicios-prevencion",
+              "page": 12,
+              "length": 989
+            },
+            {
+              "rank": 2,
+              "score": 21.131615,
+              "chunk_id": "02_rd_39_1997_servicios_prevencion_consolidado_p0012_c0056",
+              "source_id": "rd-39-1997-servicios-prevencion",
+              "page": 12,
+              "length": 795
+            },
+            {
+              "rank": 3,
+              "score": 19.382632,
+              "chunk_id": "02_rd_39_1997_servicios_prevencion_consolidado_p0011_c0050",
+              "source_id": "rd-39-1997-servicios-prevencion",
+              "page": 11,
+              "length": 899
+            },
+            {
+              "rank": 4,
+              "score": 19.200002,
+              "chunk_id": "02_rd_39_1997_servicios_prevencion_consolidado_p0011_c0048",
+              "source_id": "rd-39-1997-servicios-prevencion",
+              "page": 11,
+              "length": 959
+            },
+            {
+              "rank": 5,
+              "score": 18.783826,
+              "chunk_id": "02_rd_39_1997_servicios_prevencion_consolidado_p0010_c0044",
+              "source_id": "rd-39-1997-servicios-prevencion",
+              "page": 10,
+              "length": 947
+            }
+          ]
+        },
+        {
+          "question_id": "plan_seguridad_obra",
+          "gold_page_hit_at_k": true,
+          "first_gold_rank": 2,
+          "reciprocal_rank": 0.5,
+          "gold_precision_at_k": 0.4,
+          "evidence_recall_at_k": 0.3333333333333333,
+          "evidence_found": [
+            "plan de seguridad y salud en el trabajo"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 15.867014,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0136_c0774",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 136,
+              "length": 859
+            },
+            {
+              "rank": 2,
+              "score": 15.632093,
+              "chunk_id": "03_rd_1627_1997_obras_construccion_consolidado_p0007_c0034",
+              "source_id": "rd-1627-1997-construccion",
+              "page": 7,
+              "length": 957
+            },
+            {
+              "rank": 3,
+              "score": 14.611846,
+              "chunk_id": "03_rd_1627_1997_obras_construccion_consolidado_p0007_c0033",
+              "source_id": "rd-1627-1997-construccion",
+              "page": 7,
+              "length": 615
+            },
+            {
+              "rank": 4,
+              "score": 14.260594,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0134_c0767",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 134,
+              "length": 820
+            },
+            {
+              "rank": 5,
+              "score": 13.893678,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0138_c0780",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 138,
+              "length": 760
+            }
+          ]
+        },
+        {
+          "question_id": "proteccion_caidas_altura",
+          "gold_page_hit_at_k": true,
+          "first_gold_rank": 2,
+          "reciprocal_rank": 0.5,
+          "gold_precision_at_k": 0.2,
+          "evidence_recall_at_k": 1.0,
+          "evidence_found": [
+            "barandillas u otro sistema de protección colectiva",
+            "altura mínima de 90 centímetros",
+            "reborde de protección"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 28.158469,
+              "chunk_id": "03_rd_1627_1997_obras_construccion_consolidado_p0019_c0098",
+              "source_id": "rd-1627-1997-construccion",
+              "page": 19,
+              "length": 705
+            },
+            {
+              "rank": 2,
+              "score": 25.785988,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0090_c0488",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 90,
+              "length": 954
+            },
+            {
+              "rank": 3,
+              "score": 22.47921,
+              "chunk_id": "09_guia_tecnica_lugares_trabajo_2015_p0020_c0091",
+              "source_id": "guia-lugares-trabajo-2015",
+              "page": 20,
+              "length": 873
+            },
+            {
+              "rank": 4,
+              "score": 20.830345,
+              "chunk_id": "06_guia_tecnica_equipos_trabajo_2021_p0107_c0696",
+              "source_id": "guia-equipos-trabajo-2021",
+              "page": 107,
+              "length": 946
+            },
+            {
+              "rank": 5,
+              "score": 19.500181,
+              "chunk_id": "03_rd_1627_1997_obras_construccion_consolidado_p0020_c0100",
+              "source_id": "rd-1627-1997-construccion",
+              "page": 20,
+              "length": 910
+            }
+          ]
+        },
+        {
+          "question_id": "eleccion_epi",
+          "gold_page_hit_at_k": true,
+          "first_gold_rank": 2,
+          "reciprocal_rank": 0.5,
+          "gold_precision_at_k": 0.2,
+          "evidence_recall_at_k": 1.0,
+          "evidence_found": [
+            "analizar y evaluar los riesgos existentes",
+            "definir las características que deberán reunir",
+            "comparar las características de los equipos de protección individual"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 21.908517,
+              "chunk_id": "05_guia_tecnica_epi_2022_p0017_c0087",
+              "source_id": "guia-epi-2022",
+              "page": 17,
+              "length": 979
+            },
+            {
+              "rank": 2,
+              "score": 16.994648,
+              "chunk_id": "05_guia_tecnica_epi_2022_p0016_c0086",
+              "source_id": "guia-epi-2022",
+              "page": 16,
+              "length": 984
+            },
+            {
+              "rank": 3,
+              "score": 14.428221,
+              "chunk_id": "04_guia_tecnica_obras_construccion_2019_p0048_c0263",
+              "source_id": "guia-obras-construccion-2019",
+              "page": 48,
+              "length": 846
+            },
+            {
+              "rank": 4,
+              "score": 13.789707,
+              "chunk_id": "05_guia_tecnica_epi_2022_p0012_c0053",
+              "source_id": "guia-epi-2022",
+              "page": 12,
+              "length": 986
+            },
+            {
+              "rank": 5,
+              "score": 13.654382,
+              "chunk_id": "05_guia_tecnica_epi_2022_p0005_c0008",
+              "source_id": "guia-epi-2022",
+              "page": 5,
+              "length": 966
+            }
+          ]
+        },
+        {
+          "question_id": "comprobacion_equipos_trabajo",
+          "gold_page_hit_at_k": true,
+          "first_gold_rank": 1,
+          "reciprocal_rank": 1.0,
+          "gold_precision_at_k": 0.4,
+          "evidence_recall_at_k": 0.6666666666666666,
+          "evidence_found": [
+            "comprobación inicial",
+            "después de cada montaje"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 18.75643,
+              "chunk_id": "06_guia_tecnica_equipos_trabajo_2021_p0017_c0091",
+              "source_id": "guia-equipos-trabajo-2021",
+              "page": 17,
+              "length": 918
+            },
+            {
+              "rank": 2,
+              "score": 17.404325,
+              "chunk_id": "06_guia_tecnica_equipos_trabajo_2021_p0017_c0092",
+              "source_id": "guia-equipos-trabajo-2021",
+              "page": 17,
+              "length": 836
+            },
+            {
+              "rank": 3,
+              "score": 11.400351,
+              "chunk_id": "06_guia_tecnica_equipos_trabajo_2021_p0174_c1082",
+              "source_id": "guia-equipos-trabajo-2021",
+              "page": 174,
+              "length": 992
+            },
+            {
+              "rank": 4,
+              "score": 9.808648,
+              "chunk_id": "06_guia_tecnica_equipos_trabajo_2021_p0071_c0462",
+              "source_id": "guia-equipos-trabajo-2021",
+              "page": 71,
+              "length": 997
+            },
+            {
+              "rank": 5,
+              "score": 9.611683,
+              "chunk_id": "09_guia_tecnica_lugares_trabajo_2015_p0082_c0421",
+              "source_id": "guia-lugares-trabajo-2015",
+              "page": 82,
+              "length": 971
+            }
+          ]
+        },
+        {
+          "question_id": "cinco_etapas_sin_tension",
+          "gold_page_hit_at_k": true,
+          "first_gold_rank": 1,
+          "reciprocal_rank": 1.0,
+          "gold_precision_at_k": 0.6,
+          "evidence_recall_at_k": 1.0,
+          "evidence_found": [
+            "desconectar",
+            "prevenir cualquier posible realimentación",
+            "verificar la ausencia de tensión",
+            "poner a tierra y en cortocircuito",
+            "proteger frente a elementos próximos en tensión"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 24.13126,
+              "chunk_id": "07_guia_tecnica_riesgo_electrico_2020_p0027_c0139",
+              "source_id": "guia-riesgo-electrico-2020",
+              "page": 27,
+              "length": 765
+            },
+            {
+              "rank": 2,
+              "score": 21.190583,
+              "chunk_id": "07_guia_tecnica_riesgo_electrico_2020_p0027_c0141",
+              "source_id": "guia-riesgo-electrico-2020",
+              "page": 27,
+              "length": 908
+            },
+            {
+              "rank": 3,
+              "score": 21.101928,
+              "chunk_id": "07_guia_tecnica_riesgo_electrico_2020_p0027_c0140",
+              "source_id": "guia-riesgo-electrico-2020",
+              "page": 27,
+              "length": 863
+            },
+            {
+              "rank": 4,
+              "score": 20.020489,
+              "chunk_id": "07_guia_tecnica_riesgo_electrico_2020_p0013_c0059",
+              "source_id": "guia-riesgo-electrico-2020",
+              "page": 13,
+              "length": 635
+            },
+            {
+              "rank": 5,
+              "score": 18.707978,
+              "chunk_id": "07_guia_tecnica_riesgo_electrico_2020_p0042_c0219",
+              "source_id": "guia-riesgo-electrico-2020",
+              "page": 42,
+              "length": 742
+            }
+          ]
+        },
+        {
+          "question_id": "colores_senalizacion",
+          "gold_page_hit_at_k": true,
+          "first_gold_rank": 1,
+          "reciprocal_rank": 1.0,
+          "gold_precision_at_k": 0.4,
+          "evidence_recall_at_k": 1.0,
+          "evidence_found": [
+            "rojo",
+            "amarillo o amarillo anaranjado",
+            "verde"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 17.418154,
+              "chunk_id": "08_guia_tecnica_senalizacion_2023_p0018_c0073",
+              "source_id": "guia-senalizacion-2023",
+              "page": 18,
+              "length": 902
+            },
+            {
+              "rank": 2,
+              "score": 17.408982,
+              "chunk_id": "08_guia_tecnica_senalizacion_2023_p0009_c0030",
+              "source_id": "guia-senalizacion-2023",
+              "page": 9,
+              "length": 994
+            },
+            {
+              "rank": 3,
+              "score": 15.043403,
+              "chunk_id": "08_guia_tecnica_senalizacion_2023_p0019_c0076",
+              "source_id": "guia-senalizacion-2023",
+              "page": 19,
+              "length": 955
+            },
+            {
+              "rank": 4,
+              "score": 12.847615,
+              "chunk_id": "08_guia_tecnica_senalizacion_2023_p0024_c0094",
+              "source_id": "guia-senalizacion-2023",
+              "page": 24,
+              "length": 993
+            },
+            {
+              "rank": 5,
+              "score": 12.827265,
+              "chunk_id": "08_guia_tecnica_senalizacion_2023_p0020_c0080",
+              "source_id": "guia-senalizacion-2023",
+              "page": 20,
+              "length": 868
+            }
+          ]
+        },
+        {
+          "question_id": "anchura_vias_circulacion",
+          "gold_page_hit_at_k": true,
+          "first_gold_rank": 1,
+          "reciprocal_rank": 1.0,
+          "gold_precision_at_k": 0.4,
+          "evidence_recall_at_k": 1.0,
+          "evidence_found": [
+            "80 centímetros",
+            "1 metro",
+            "separación de seguridad suficiente"
+          ],
+          "retrieved": [
+            {
+              "rank": 1,
+              "score": 34.907332,
+              "chunk_id": "09_guia_tecnica_lugares_trabajo_2015_p0023_c0111",
+              "source_id": "guia-lugares-trabajo-2015",
+              "page": 23,
+              "length": 366
+            },
+            {
+              "rank": 2,
+              "score": 24.431349,
+              "chunk_id": "09_guia_tecnica_lugares_trabajo_2015_p0023_c0110",
+              "source_id": "guia-lugares-trabajo-2015",
+              "page": 23,
+              "length": 956
+            },
+            {
+              "rank": 3,
+              "score": 16.122656,
+              "chunk_id": "09_guia_tecnica_lugares_trabajo_2015_p0038_c0178",
+              "source_id": "guia-lugares-trabajo-2015",
+              "page": 38,
+              "length": 881
+            },
+            {
+              "rank": 4,
+              "score": 14.828756,
+              "chunk_id": "09_guia_tecnica_lugares_trabajo_2015_p0054_c0271",
+              "source_id": "guia-lugares-trabajo-2015",
+              "page": 54,
+              "length": 952
+            },
+            {
+              "rank": 5,
+              "score": 14.785403,
+              "chunk_id": "09_guia_tecnica_lugares_trabajo_2015_p0022_c0100",
+              "source_id": "guia-lugares-trabajo-2015",
+              "page": 22,
+              "length": 578
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
