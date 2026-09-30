@@ -1,0 +1,8 @@
+# Dependencias directas comprobadas en Python 3.12. No sustituye requirements.txt del equipo.
+fastapi==0.141.1
+pydantic==2.13.5
+uvicorn==0.54.0
+python-multipart==0.0.32
+pypdf==6.19.0
+httpx==0.28.1
+pytest==9.1.1
