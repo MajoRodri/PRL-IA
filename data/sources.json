@@ -1,0 +1,102 @@
+{
+  "_about": {
+    "purpose": "Manifiesto reproducible de las fuentes oficiales que forman el corpus PRL.",
+    "input": "Metadatos, páginas oficiales y URL de descarga del BOE y del INSST.",
+    "output": "Lista que utiliza download_corpus.py para descargar y load_corpus() para enriquecer cada página.",
+    "flow_position": "Inicio del flujo: manifiesto -> descarga en data/raw -> ingesta -> chunking -> embeddings."
+  },
+  "corpus": "PRL Assistant MVP",
+  "checked_on": "2026-09-28",
+  "documents": [
+    {
+      "id": "ley-31-1995-prl",
+      "filename": "01_ley_31_1995_prl_consolidada.pdf",
+      "title": "Ley 31/1995, de 8 de noviembre, de Prevencion de Riesgos Laborales",
+      "publisher": "BOE",
+      "document_type": "legislation",
+      "legal_status": "Texto consolidado informativo; para efectos juridicos debe consultarse la publicacion oficial.",
+      "landing_page": "https://www.boe.es/eli/es/l/1995/11/08/31/con",
+      "download_url": "https://www.boe.es/buscar/pdf/1995/BOE-A-1995-24292-consolidado.pdf"
+    },
+    {
+      "id": "rd-39-1997-servicios-prevencion",
+      "filename": "02_rd_39_1997_servicios_prevencion_consolidado.pdf",
+      "title": "Real Decreto 39/1997, Reglamento de los Servicios de Prevencion",
+      "publisher": "BOE",
+      "document_type": "legislation",
+      "legal_status": "Texto consolidado informativo; para efectos juridicos debe consultarse la publicacion oficial.",
+      "landing_page": "https://www.boe.es/eli/es/rd/1997/01/17/39/con",
+      "download_url": "https://www.boe.es/buscar/pdf/1997/BOE-A-1997-1853-consolidado.pdf"
+    },
+    {
+      "id": "rd-1627-1997-construccion",
+      "filename": "03_rd_1627_1997_obras_construccion_consolidado.pdf",
+      "title": "Real Decreto 1627/1997 sobre seguridad y salud en obras de construccion",
+      "publisher": "BOE",
+      "document_type": "legislation",
+      "legal_status": "Texto consolidado informativo; para efectos juridicos debe consultarse la publicacion oficial.",
+      "landing_page": "https://www.boe.es/eli/es/rd/1997/10/24/1627/con",
+      "download_url": "https://www.boe.es/buscar/pdf/1997/BOE-A-1997-22614-consolidado.pdf"
+    },
+    {
+      "id": "guia-obras-construccion-2019",
+      "filename": "04_guia_tecnica_obras_construccion_2019.pdf",
+      "title": "Guia tecnica para la evaluacion y prevencion de los riesgos relativos a las obras de construccion",
+      "publisher": "INSST",
+      "document_type": "technical_guide",
+      "legal_status": "Guia tecnica no vinculante.",
+      "landing_page": "https://www.insst.es/documentacion/catalogo-de-publicaciones/guia-tecnica-para-la-evaluacion-y-prevencion-de-los-riesgos-relativos-a-las-obras-de-construccion-ano-2019",
+      "download_url": "https://www.insst.es/documents/94886/789467/Gu%C3%ADa%2Bt%C3%A9cnica%2Bpara%2Bla%2Bevaluaci%C3%B3n%2By%2Bprevenci%C3%B3n%2Bde%2Blos%2Briesgos%2Brelativos%2Ba%2Blas%2Bobras%2Bde%2Bconstrucci%C3%B3n.pdf/1d47a9bb-7f57-4789-a8fc-b9f2748200bf?t=1644832798505"
+    },
+    {
+      "id": "guia-epi-2022",
+      "filename": "05_guia_tecnica_epi_2022.pdf",
+      "title": "Guia tecnica para la utilizacion por los trabajadores de equipos de proteccion individual",
+      "publisher": "INSST",
+      "document_type": "technical_guide",
+      "legal_status": "Guia tecnica no vinculante.",
+      "landing_page": "https://www.insst.es/documentacion/catalogo-de-publicaciones/guia-tecnica-para-la-evaluacion-y-prevencion-de-los-riesgos-para-la-utilizacion-por-los-trabajadores-en-el-trabajo-de-equipos-de-proteccion-individual",
+      "download_url": "https://www.insst.es/documents/94886/789467/Gu%C3%ADa%2Bt%C3%A9cnica%2Bpara%2Bla%2Butilizaci%C3%B3n%2Bpor%2Blos%2Btrabajadores%2Bde%2Bequipos%2Bde%2Bprotecci%C3%B3n%2Bindividual.pdf/26f34162-16e7-4c80-afa2-15adbbde42f4?t=1725623467830"
+    },
+    {
+      "id": "guia-equipos-trabajo-2021",
+      "filename": "06_guia_tecnica_equipos_trabajo_2021.pdf",
+      "title": "Guia tecnica para la evaluacion y prevencion de los riesgos relativos a la utilizacion de los equipos de trabajo",
+      "publisher": "INSST",
+      "document_type": "technical_guide",
+      "legal_status": "Guia tecnica no vinculante.",
+      "landing_page": "https://www.insst.es/documentacion/catalogo-de-publicaciones/guia-tecnica-para-la-evaluacion-y-prevencion-de-los-riesgos-relativos-a-la-utilizacion-de-los-equipos-de-trabajo",
+      "download_url": "https://www.insst.es/documents/94886/203536/Gu%C3%ADa%2Bt%C3%A9cnica%2Bpara%2Bla%2Bevaluaci%C3%B3n%2By%2Bprevenci%C3%B3n%2Bde%2Blos%2Briesgos%2Brelativos%2Ba%2Bla%2Butilizaci%C3%B3n%2Bde%2Blos%2Bequipos%2Bde%2Btrabajo.pdf/c7c0d07d-c6fe-4e8f-8822-7b5102fb5776?t=1772546077255"
+    },
+    {
+      "id": "guia-riesgo-electrico-2020",
+      "filename": "07_guia_tecnica_riesgo_electrico_2020.pdf",
+      "title": "Guia tecnica para la evaluacion y prevencion del riesgo electrico",
+      "publisher": "INSST",
+      "document_type": "technical_guide",
+      "legal_status": "Guia tecnica no vinculante.",
+      "landing_page": "https://www.insst.es/documentacion/catalogo-de-publicaciones/guia-tecnica-para-la-evaluacion-y-prevencion-de-los-riesgos-relacionados-con-la-proteccion-frente-al-riesgo-electrico",
+      "download_url": "https://www.insst.es/documents/94886/789467/Gu%C3%ADa%2Bt%C3%A9cnica%2Bpara%2Bla%2Bevaluaci%C3%B3n%2By%2Bprevenci%C3%B3n%2Bde%2Blos%2Briesgos%2Brelacionados%2Bcon%2Bla%2Bprotecci%C3%B3n%2Bfrente%2Bal%2Briesgo%2Bel%C3%A9ctrico.pdf/46679419-d4cc-461e-8da1-4b2e65df9146?t=1605800479658"
+    },
+    {
+      "id": "guia-senalizacion-2023",
+      "filename": "08_guia_tecnica_senalizacion_2023.pdf",
+      "title": "Guia tecnica sobre senalizacion de seguridad y salud en el trabajo",
+      "publisher": "INSST",
+      "document_type": "technical_guide",
+      "legal_status": "Guia tecnica no vinculante.",
+      "landing_page": "https://www.insst.es/documentacion/catalogo-de-publicaciones/guia-tecnica-sobre-senalizacion-de-sst-2023",
+      "download_url": "https://www.insst.es/documents/94886/203536/Gu%C3%ADa%2BT%C3%A9cnica%2Bsobre%2Bse%C3%B1alizaci%C3%B3n%2Bde%2Bseguridad%2By%2Bsalud%2Ben%2Bel%2Btrabajo%2B-%2BA%C3%B1o%2B2023.pdf/9618303b-57f2-d0bb-ef79-e644e5427df9?t=1698134324417"
+    },
+    {
+      "id": "guia-lugares-trabajo-2015",
+      "filename": "09_guia_tecnica_lugares_trabajo_2015.pdf",
+      "title": "Guia tecnica para la evaluacion y prevencion de los riesgos relativos a la utilizacion de los lugares de trabajo",
+      "publisher": "INSST",
+      "document_type": "technical_guide",
+      "legal_status": "Guia tecnica no vinculante.",
+      "landing_page": "https://www.insst.es/documentacion/catalogo-de-publicaciones/guia-tecnica-para-la-evaluacion-y-la-prevencion-de-los-riesgos-relativos-a-la-utilizacion-de-los-lugares-de-trabajo",
+      "download_url": "https://www.insst.es/documents/94886/203536/Gu%C3%ADa%2Bt%C3%A9cnica%2Bpara%2Bla%2Bevaluaci%C3%B3n%2By%2Bprevenci%C3%B3n%2Bde%2Blos%2Briesgos%2Brelativos%2Ba%2Bla%2Butilizaci%C3%B3n%2Bde%2Blugares%2Bde%2Btrabajo.pdf/deac8eb9-e242-48c4-a634-4cf88927fff7"
+    }
+  ]
+}

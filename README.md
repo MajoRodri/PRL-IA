@@ -2,7 +2,7 @@
 
 Asistente documental de prevención de riesgos laborales para consultar información con fuentes verificables. Proyecto de equipo del bootcamp de IA/ML, Módulo V.
 
-**Estado de esta entrega: módulo de persona 5 operativo de forma independiente.** Incluye gestión documental y recuperación con un índice léxico de demostración. La ingesta definitiva, los embeddings/ChromaDB, el RAG y la interfaz se integrarán con los módulos del equipo. Este repositorio no se presenta todavía como un RAG completo.
+**Estado documentado al incorporar `dev` (commit `4b0dbbe`, 30/09/2026):** se dispone de la ingesta y el chunking de persona 1, el almacenamiento vectorial de persona 2 y la gestión documental y recuperación independiente de persona 5. Su presencia en la misma rama no implica que estén conectados de extremo a extremo. La API de persona 5 continúa usando el procesador y el índice léxico de demostración. El adaptador Chroma preparado por separado aún no forma parte de este estado; la cadena RAG y la interfaz completa quedan pendientes de integración y verificación.
 
 ## Problema y uso previsto
 
@@ -23,9 +23,86 @@ Se utiliza el reparto de la captura «Recuperación avanzada y gestión document
 | `docs/ethical_use.md` | Privacidad, trazabilidad y límites de uso |
 | `README.md` | Funcionamiento y puesta en marcha |
 
-Se añaden `docs/integration.md`, `docs/guia_maria.md`, `docs/github_wsl.md`, `requirements-persona5.txt`, el bloqueo de versiones, un corpus sintético y un script de evaluación para facilitar la integración y la defensa.
+La documentación de apoyo se encuentra en `docs/integration.md`, `docs/guia_maria.md` y `docs/github_wsl.md`. Se conserva el corpus sintético y el script de evaluación de P5. Las dependencias se han unificado en `requirements.txt`; los archivos `requirements-persona5.txt` y `requirements-persona5-lock.txt` se han retirado. Las referencias antiguas a ellos en guías auxiliares deben interpretarse según la instalación de este README.
 
-## Arquitectura
+## Aportaciones del equipo incorporadas desde dev
+
+| Área | Archivos principales | Estado y alcance |
+|---|---|---|
+| Corpus e ingesta — persona 1 | `data/sources.json`, `scripts/download_corpus.py`, `src/ingestion.py` | Manifiesto de nueve fuentes del BOE/INSST; descarga de PDF; extracción y limpieza por página de PDF, TXT y Markdown |
+| Chunking — persona 1 | `src/chunking.py`, `scripts/evaluate_chunking.py`, `docs/chunking.md` | Fragmentación por página, metadatos y comparación experimental de tamaños y solapamientos |
+| Embeddings e índice — persona 2 | `src/vector_store.py`, `docs/vector_store.md` | Embeddings locales, colección persistente Chroma y búsqueda semántica básica |
+| Servicio y recuperación — persona 5 | `src/document_service.py`, `src/retrieval.py`, `src/api_documents.py` | Carga, catálogo, reindexación, eliminación y recuperación con filtros; API independiente con componentes demo |
+
+### Corpus, ingesta y chunking
+
+El manifiesto `data/sources.json` declara nueve documentos del BOE y del INSST,
+con título, organismo, tipo, estatus documental y enlaces de origen. Los PDF se
+descargan en `data/raw/` y no se incluyen en Git. El script comprueba la firma
+PDF de las nuevas descargas y omite los archivos existentes salvo `--force`.
+
+`load_document()` procesa PDF, TXT y Markdown; `load_corpus()` añade los
+metadatos del manifiesto. La limpieza normaliza espacios y caracteres invisibles
+y une palabras partidas por guiones de fin de línea, conservando listas,
+numeraciones y títulos. Las páginas PDF se numeran desde 1; TXT y Markdown
+utilizan página 1. No hay OCR.
+
+`split_documents()` usa por defecto **1000 caracteres y 200 de solapamiento**,
+con preferencia por cortes en párrafos, frases y espacios. Los fragmentos no
+mezclan páginas. Añade posiciones, identificadores e índices de fragmento y,
+cuando puede inferirse, una sección. Estos valores no sustituyen todavía los
+180/30 **palabras** del procesador demo de la API P5.
+
+El benchmark registrado por persona 1 en
+`data/evaluation/chunking_results.json` compara las siguientes configuraciones
+con BM25, sobre nueve fuentes, 750 páginas con texto y diez preguntas:
+
+| Tamaño / solapamiento (caracteres) | Fragmentos | Hit@5 | MRR | Precisión@5 | Evidencia@5 |
+|---|---:|---:|---:|---:|---:|
+| 500 / 50 | 7540 | 90 % | 0,7333 | 30 % | 50,67 % |
+| 800 / 120 | 4956 | 90 % | 0,7000 | 30 % | 70,00 % |
+| 1000 / 200 | 4170 | 90 % | 0,6833 | 34 % | 80,00 % |
+
+Son resultados aportados por el equipo, no una nueva ejecución al actualizar
+este README. La elección 1000/200 prioriza cobertura de evidencia y menor número
+de fragmentos, a cambio de mayor duplicación por overlap y menor MRR. BM25 es
+una referencia léxica: esos resultados no demuestran la calidad de MiniLM ni
+del RAG. Método y límites: [estrategia de chunking](docs/chunking.md).
+
+### Embeddings y almacenamiento vectorial
+
+La implementación de persona 2 utiliza `all-MiniLM-L6-v2` mediante Sentence
+Transformers y `chromadb.PersistentClient`. Mantiene la colección
+`prl_documentos` en `./chroma_db` y solicita distancia coseno al crearla.
+El modelo se inicializa al importar el módulo y puede descargarse la primera
+vez; el cálculo de embeddings se realiza localmente.
+
+Su interfaz pública incluye `get_client()`, `get_collection()`,
+`add_fragments(fragments)` y `search(query, k=4)`. La búsqueda devuelve texto,
+metadatos y **distancia**: una distancia menor representa mayor cercanía.
+No es el `score` de relevancia creciente del recuperador P5.
+
+Las pruebas de persona 2 utilizan mocks: verifican las llamadas y la
+transformación de datos, sin ejecutar Chroma real ni descargar el modelo.
+Detalles: [almacenamiento vectorial](docs/vector_store.md).
+
+### Conexiones aún pendientes
+
+- **P1 → P2:** el chunking entrega `metadata.chunk_id`, mientras que
+  `add_fragments()` requiere `id` en el nivel superior. Hace falta adaptar ese
+  contrato antes de indexar; no basta con pasar la lista directamente.
+- **P1 → P5:** adaptar la ingesta y el chunking al contrato `DocumentProcessor`,
+  conservando la identidad del documento, la categoría y las fuentes.
+- **P2 → P5:** adaptar el índice al contrato `DocumentIndex`, incluyendo filtros
+  antes del ranking, conversión de distancia, sustitución y borrado. La función
+  `search()` de P2 por sí sola no cubre estas operaciones.
+- **RAG e interfaz:** conectar el contexto con la generación y la presentación,
+  comprobar las citas y evaluar cuándo debe abstenerse el sistema.
+
+La API P5 admite actualmente PDF con texto y TXT UTF-8. Que P1 soporte Markdown
+no amplía automáticamente los formatos admitidos por esa API.
+
+## Arquitectura de la API documental de demostración
 
 ```mermaid
 flowchart TD
@@ -53,50 +130,60 @@ SQLite sustituye un catálogo JSON plano para disponer de restricciones de unici
 ```text
 PRL-IA/
   src/
-    ingestion.py             # módulo del equipo, sin implementar en la base revisada
-    chunking.py              # módulo del equipo
-    vector_store.py          # módulo del equipo
-    rag_chain.py             # módulo del equipo
-    api.py                   # API general del equipo
-    retrieval.py             # persona 5
-    document_service.py      # persona 5
-    api_documents.py         # persona 5
-  frontend/                  # estructura existente del equipo; no modificada
+    ingestion.py             # persona 1: lectura y limpieza
+    chunking.py              # persona 1: fragmentación y metadatos
+    vector_store.py          # persona 2: embeddings y Chroma
+    retrieval.py             # persona 5: recuperación y contratos
+    document_service.py      # persona 5: servicio y adaptadores demo
+    api_documents.py         # persona 5: API independiente
+    rag_chain.py             # integración RAG pendiente de verificar
+    api.py                   # integración API general pendiente
+  frontend/                  # estructura del frontend del equipo
   data/
-    raw/                     # reservado por el equipo
-    chroma/                  # reservado por el equipo
+    sources.json
+    raw/                     # PDF locales excluidos; README versionado
+    chroma/                  # directorio previsto en la estructura inicial
+    evaluation/
+      chunking_questions.json
+      chunking_results.json
     examples/prevencion_demo.txt
-    persona5/                # creado al ejecutar; excluido de Git
-      raw/
-      documents.sqlite3
+    persona5/                # datos locales de la demo P5; excluidos de Git
+  chroma_db/                 # persistencia local usada por P2; excluida de Git
+  scripts/
+    download_corpus.py
+    evaluate_chunking.py
+    evaluate_retrieval.py
   tests/
+    test_ingestion.py
+    test_chunking.py
+    test_evaluate_chunking.py
+    test_vector_store.py
     test_retrieval.py
     test_documents_api.py
     fixtures_retrieval.json
-  scripts/evaluate_retrieval.py
   docs/
+    chunking.md
+    vector_store.md
     evaluation.md
     ethical_use.md
     integration.md
     guia_maria.md
     github_wsl.md
-  requirements.txt            # del equipo; no modificado por esta entrega
-  requirements-persona5.txt
-  requirements-persona5-lock.txt
-  .env.example               # del equipo; no modificado
+  requirements.txt           # dependencias comunes
+  .env.example
   .gitignore
   README.md
 ```
 
 ## Instalar y ejecutar en Ubuntu/WSL
 
-Comprobado con Python 3.12. Las instrucciones se ejecutan en Ubuntu, no en PowerShell. Primero coloca los cambios con [la guía de GitHub y WSL](docs/github_wsl.md).
+Comprobado con Python 3.12. Las instrucciones se ejecutan en Ubuntu, no en PowerShell. Los comandos parten de una copia del repositorio con las aportaciones del equipo incorporadas. Si el entorno ya existe y las dependencias están instaladas, basta con activarlo; no hace falta recrearlo ni reinstalarlo por actualizar la documentación.
 
 ```bash
 cd "/mnt/c/Users/EVO/Desktop/BOOTCAMP/MODULO V/Proyecto PRL-IA/PRL-IA"
 python3 --version
-python3 -m venv .venv
-source .venv/bin/activate
+# Solo en la primera instalación, si todavía no existe venv:
+python3 -m venv venv
 # Activar el entorno virtual
 source venv/bin/activate
 
@@ -108,7 +195,6 @@ python -m pip install -r requirements.txt
 
 # Comprobar las dependencias
 python -m pip check
-python -m pip install -r requirements-persona5-lock.txt
 python -m pytest tests/test_retrieval.py tests/test_documents_api.py -q
 python -m uvicorn src.api_documents:create_app --factory --host 127.0.0.1 --port 8005
 ```
@@ -123,9 +209,27 @@ No hacen falta `.env`, claves ni modelos descargados para la demo. Configuració
 export PRL_P5_DATA_DIR="data/persona5"
 ```
 
-No se carga `.env` automáticamente. Si cambias la ruta, exclúyela también de Git. Para integrar dependencias, el equipo deberá reconciliar las versiones con su entorno; no se ha sustituido el `requirements.txt` compartido.
+No se carga `.env` automáticamente. Si cambias la ruta, exclúyela también de Git. Las dependencias comunes están en `requirements.txt`. La demo léxica no inicializa `src/vector_store.py`; disponer de Chroma instalado no cambia por sí solo el índice que utiliza la API.
 
-## Demo de principio a fin
+## Descargar el corpus y reproducir el benchmark de P1
+
+Estos pasos son independientes de la carga de documentos mediante la API P5.
+Requieren conexión para descargar los PDF y espacio local para conservarlos.
+Desde la raíz del repositorio, con el entorno activado:
+
+```bash
+python scripts/download_corpus.py
+python scripts/evaluate_chunking.py
+```
+
+Ejecuta la evaluación después de comprobar que las descargas necesarias han
+terminado correctamente. El benchmark valida las páginas y evidencias de las
+preguntas y actualiza `data/evaluation/chunking_results.json`. Los PDF remotos
+pueden cambiar; los resultados registrados corresponden al corpus utilizado
+por el equipo en su ejecución. Descargar los documentos no los indexa
+automáticamente en Chroma ni en el catálogo de la API P5.
+
+## Demo de principio a fin — persona 5
 
 Con el servidor arrancado, abre otra terminal en la raíz del proyecto:
 
@@ -181,6 +285,19 @@ Solo los documentos `indexed` participan en recuperación. Si falla una reindexa
 
 ## Pruebas y evaluación
 
+Para comprobar conjuntamente las pruebas incorporadas de P1, P2 y P5:
+
+```bash
+python -m pytest tests/test_ingestion.py tests/test_chunking.py tests/test_evaluate_chunking.py tests/test_vector_store.py tests/test_retrieval.py tests/test_documents_api.py -q
+```
+
+Este README no atribuye un resultado a esa ejecución conjunta: hay que registrar
+su salida tras resolver el merge. Las pruebas vectoriales de P2 usan mocks;
+no equivalen a una prueba semántica real ni a una integración completa.
+
+Para repetir solo la evaluación de la demo P5:
+
+
 ```bash
 python -m pytest tests/test_retrieval.py tests/test_documents_api.py -q
 python -m scripts.evaluate_retrieval
@@ -195,18 +312,18 @@ Verificación del 29/09/2026: **49 pruebas aprobadas**, con un aviso de deprecac
 | Recuperar k fragmentos con metadatos | `Retriever`, API y tests | Verificado con índice léxico demo |
 | Filtros y relevancia | Metadatos, umbral, orden y deduplicación | Implementado y probado |
 | Carga y gestión documental | Catálogo, originales, reindexación y eliminación | Implementado y probado |
-| Chunking justificado | Baseline 180 palabras/30 de overlap, por página | Demo; P1 definirá estrategia final |
-| Embeddings y base vectorial persistente | Contrato de índice | Pendiente de P2; SQLite demo no satisface este requisito |
+| Chunking justificado | P1: 1000/200 caracteres, benchmark BM25 y `docs/chunking.md` | Implementado y evaluado por P1; conexión a la API P5 pendiente |
+| Embeddings y base vectorial persistente | P2: MiniLM, Chroma y `docs/vector_store.md` | Implementado en P2; conexión a P5 y evaluación semántica pendientes |
 | Orquestación LangChain/LlamaIndex | Contrato de contexto | Pendiente de P3 |
 | Respuestas fundamentadas y abstención | Se informa si hay contexto | Evaluación del LLM pendiente |
 | Interfaz y fuentes visibles | API entrega fuentes | Integración visual pendiente |
-| Trabajo colaborativo | Entrega aislada, guía de rama y PR | Push y revisión pendientes de María/equipo |
+| Trabajo colaborativo | Aportaciones de P1, P2 y P5 reunidas en la rama de trabajo | Cierre del merge, pruebas conjuntas y revisión pendientes |
 | Ética y privacidad | `docs/ethical_use.md` | Riesgos documentados; controles productivos pendientes |
 
 ## Límites y siguiente integración
 
-Prototipo local, sin autenticación, autorización por documento, OCR ni análisis antimalware. PDF: máximo 300 páginas y 10 MiB; TXT UTF-8. No debe exponerse públicamente ni usarse con información sensible. El límite de tamaño se comprueba tras el parser multipart; para despliegue se necesita un límite de petición previo, aislamiento del parser y control de recursos. Los índices grandes requieren una implementación vectorial; la demo recorre todos los fragmentos.
+Prototipo local, sin autenticación, autorización por documento, OCR ni análisis antimalware. PDF: máximo 300 páginas y 10 MiB; TXT UTF-8. No debe exponerse públicamente ni usarse con información sensible. El límite de tamaño se comprueba tras el parser multipart; para despliegue se necesita un límite de petición previo, aislamiento del parser y control de recursos. La demo recorre todos los fragmentos. La implementación vectorial de P2 ya está disponible, pero no está conectada a esta API en el estado documentado.
 
 La selección revisa hasta `5*k` candidatos (máximo 100), por lo que duplicados o documentos ocultos pueden dar menos de k resultados aun existiendo otros válidos. El equipo puede ampliar el contrato con paginación de candidatos antes de usar corpus grandes. Reindexar o eliminar registros fallidos evita acumularlos.
 
-Integración: [contratos](docs/integration.md). Para comprender y defender tu parte: [guía de María](docs/guia_maria.md). No se han implementado ni modificado los módulos asignados al resto del equipo.
+Integración: [contratos](docs/integration.md). Para comprender y defender tu parte: [guía de María](docs/guia_maria.md). Las implementaciones de P1 y P2 incorporadas desde `dev` conservan la autoría del equipo. La próxima fase es conectar sus contratos con P5 y comprobar el flujo completo antes de incorporar generación con LLM.
