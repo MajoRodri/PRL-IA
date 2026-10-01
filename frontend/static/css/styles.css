@@ -785,6 +785,16 @@ button { font-family: var(--font); }
   color: var(--body);
   border-radius: var(--r-sm) var(--r-lg) var(--r-lg) var(--r-lg);
 }
+.message__bubble ul, .message__bubble ol {
+  margin: var(--s8) 0;
+  padding-left: var(--s20);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+}
+.message__bubble p { margin: var(--s4) 0; }
+.message__bubble p:first-child { margin-top: 0; }
+.message__bubble p:last-child  { margin-bottom: 0; }
 
 /* Sources */
 .message__sources {
@@ -821,6 +831,34 @@ button { font-family: var(--font); }
 }
 .message__loading span:nth-child(2) { animation-delay: 0.2s; }
 .message__loading span:nth-child(3) { animation-delay: 0.4s; }
+
+/* Upload progress bubble */
+.upload-progress { display: flex; flex-direction: column; gap: var(--s4); min-width: 210px; }
+.upload-progress__name {
+  font-size: 0.8rem; font-weight: 600; color: var(--navy);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 240px;
+}
+.upload-progress__row { display: flex; align-items: center; gap: var(--s8); }
+.upload-progress__track {
+  flex: 1; height: 6px; background: var(--border);
+  border-radius: var(--r-full); overflow: hidden;
+}
+.upload-progress__fill {
+  height: 100%; width: 0%; background: var(--blue);
+  border-radius: var(--r-full); transition: width 0.25s ease;
+}
+.upload-progress__fill--processing {
+  width: 100% !important;
+  background: linear-gradient(90deg, var(--blue) 0%, var(--blue-dark) 50%, var(--blue) 100%);
+  background-size: 200% 100%;
+  animation: shimmer-bar 1.5s ease-in-out infinite;
+}
+@keyframes shimmer-bar {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.upload-progress__pct { font-size: 0.72rem; font-weight: 600; color: var(--muted); min-width: 32px; text-align: right; }
+.upload-progress__status { font-size: 0.75rem; color: var(--muted); }
 
 /* Upload bar */
 .chat__upload {

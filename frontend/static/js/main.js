@@ -81,12 +81,14 @@ function closeChat() {
   chatPopup.setAttribute('aria-hidden', 'true');
   chatWidget.classList.remove('is-expanded');
   chatExpand?.setAttribute('aria-label', 'Expandir chat');
+  document.body.style.overflow = '';
 }
 
 function collapseExpanded() {
   chatPopup.classList.remove('chat-popup--expanded');
   chatWidget.classList.remove('is-expanded');
   chatExpand?.setAttribute('aria-label', 'Expandir chat');
+  document.body.style.overflow = '';
 }
 
 /* Show widget once the hero is completely out of view (= white section visible) */
@@ -100,6 +102,7 @@ if (heroSection) {
       chatWidget.setAttribute('aria-hidden', 'false');
       if (!chatUserClosed) openChat();
     } else {
+      if (chatPopup.classList.contains('chat-popup--expanded')) return;
       chatWidget.classList.remove('is-visible');
       chatWidget.setAttribute('aria-hidden', 'true');
       closeChat();
@@ -136,6 +139,7 @@ chatExpand?.addEventListener('click', () => {
   const isExpanded = chatPopup.classList.toggle('chat-popup--expanded');
   chatWidget.classList.toggle('is-expanded', isExpanded);
   chatExpand.setAttribute('aria-label', isExpanded ? 'Reducir chat' : 'Expandir chat');
+  document.body.style.overflow = isExpanded ? 'hidden' : '';
 });
 
 /* Click on the dark overlay (outside the popup) → collapse */
@@ -152,13 +156,6 @@ document.querySelectorAll('a[href="#chat"]').forEach(link => {
   });
 });
 
-/* ── Suggestion pills ─────────────────────────────────────── */
-document.querySelectorAll('.chat__suggestion').forEach(btn => {
-  btn.addEventListener('click', () => {
-    chatInput.value = btn.textContent.trim();
-    openChat();
-  });
-});
 
 /* ── Chat form submit ─────────────────────────────────────── */
 chatForm.addEventListener('submit', async (e) => {
@@ -199,29 +196,90 @@ chatForm.addEventListener('submit', async (e) => {
   }
 });
 
-/* ── File upload (placeholder) ────────────────────────────── */
+/* ── File upload ──────────────────────────────────────────── */
+function uploadWithProgress(file, onProgress) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    const form = new FormData();
+    form.append('file', file);
+
+    xhr.upload.addEventListener('progress', (e) => {
+      if (e.lengthComputable) onProgress(Math.round((e.loaded / e.total) * 100));
+    });
+    xhr.addEventListener('load', () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try { resolve(JSON.parse(xhr.responseText)); }
+        catch { resolve({}); }
+      } else {
+        reject(new Error(`HTTP ${xhr.status}`));
+      }
+    });
+    xhr.addEventListener('error', () => reject(new Error('Error de red')));
+    xhr.open('POST', '/api/upload');
+    xhr.send(form);
+  });
+}
+
+function appendProgress(filename) {
+  const id = `prog-${Date.now()}`;
+  const el = document.createElement('div');
+  el.id = id;
+  el.className = 'message message--assistant';
+  el.innerHTML = `
+    <div class="message__avatar" aria-hidden="true">${ICON.assistant}</div>
+    <div class="message__body">
+      <div class="message__bubble">
+        <div class="upload-progress">
+          <span class="upload-progress__name">${escapeHTML(filename)}</span>
+          <div class="upload-progress__row">
+            <div class="upload-progress__track">
+              <div class="upload-progress__fill" id="${id}-fill"></div>
+            </div>
+            <span class="upload-progress__pct" id="${id}-pct">0%</span>
+          </div>
+          <span class="upload-progress__status" id="${id}-status">Subiendo...</span>
+        </div>
+      </div>
+    </div>`;
+  chatMessages.appendChild(el);
+  scrollToBottom();
+
+  return {
+    setProgress(pct) {
+      const fill   = document.getElementById(`${id}-fill`);
+      const pctEl  = document.getElementById(`${id}-pct`);
+      const status = document.getElementById(`${id}-status`);
+      if (fill)   fill.style.width = `${pct}%`;
+      if (pctEl)  pctEl.textContent = `${pct}%`;
+      if (pct >= 100) {
+        fill?.classList.add('upload-progress__fill--processing');
+        if (status) status.textContent = 'Indexando fragmentos...';
+      }
+    },
+    remove() { document.getElementById(id)?.remove(); },
+  };
+}
+
 fileUpload?.addEventListener('change', async () => {
-  const file = fileUpload.files[0];
-  if (!file) return;
+  const files = Array.from(fileUpload.files);
+  if (!files.length) return;
 
   removeWelcome();
-  appendMessage('user', `Cargando documento: ${file.name}`);
-
-  const loadingId = appendLoading();
-  const form = new FormData();
-  form.append('file', file);
-
-  try {
-    const res = await fetch('/api/upload', { method: 'POST', body: form });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    removeLoading(loadingId);
-    appendMessage('assistant', `Documento "${file.name}" procesado e indexado correctamente. Ya puedes hacer preguntas sobre él.`);
-  } catch {
-    removeLoading(loadingId);
-    appendMessage('assistant', 'No se pudo procesar el documento. Comprueba el formato e inténtalo de nuevo.');
-  }
-
   fileUpload.value = '';
+
+  for (const file of files) {
+    appendMessage('user', `Cargando: ${file.name}`);
+    const progress = appendProgress(file.name);
+
+    try {
+      const data = await uploadWithProgress(file, (pct) => progress.setProgress(pct));
+      progress.remove();
+      appendMessage('assistant', data.message ?? `"${file.name}" indexado correctamente.`);
+    } catch {
+      progress.remove();
+      appendMessage('assistant', `No se pudo procesar "${file.name}". Comprueba el formato e inténtalo de nuevo.`);
+    }
+  }
 });
 
 /* ── Helpers ──────────────────────────────────────────────── */
@@ -244,10 +302,11 @@ function appendMessage(role, text, sources = []) {
        </div>`
     : '';
 
+  const bubbleContent = role === 'assistant' ? renderMarkdown(text) : escapeHTML(text);
   el.innerHTML = `
     <div class="message__avatar" aria-hidden="true">${avatarContent}</div>
     <div class="message__body">
-      <div class="message__bubble">${escapeHTML(text)}</div>
+      <div class="message__bubble">${bubbleContent}</div>
       ${sourcesHTML}
     </div>`;
 
@@ -289,4 +348,39 @@ function escapeHTML(str) {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
+}
+
+function renderMarkdown(raw) {
+  const lines = String(raw).split('\n');
+  const out = [];
+  let listTag = null;
+
+  const applyInline = (s) =>
+    s.replace(/\*\*(.*?)\*\*/g, (_, t) => `<strong>${escapeHTML(t)}</strong>`)
+     .replace(/_(.*?)_/g, (_, t) => `<em>${escapeHTML(t)}</em>`);
+
+  const flushList = () => { if (listTag) { out.push(`</${listTag}>`); listTag = null; } };
+
+  for (const raw_line of lines) {
+    const line = raw_line.trimEnd();
+    const ulMatch = line.match(/^[\-\*•]\s+(.+)/);
+    const olMatch = line.match(/^\d+[.)]\s+(.+)/);
+
+    if (ulMatch) {
+      if (listTag !== 'ul') { flushList(); out.push('<ul>'); listTag = 'ul'; }
+      out.push(`<li>${applyInline(escapeHTML(ulMatch[1]))}</li>`);
+    } else if (olMatch) {
+      if (listTag !== 'ol') { flushList(); out.push('<ol>'); listTag = 'ol'; }
+      out.push(`<li>${applyInline(escapeHTML(olMatch[1]))}</li>`);
+    } else {
+      flushList();
+      if (line.trim() === '') {
+        out.push('<br>');
+      } else {
+        out.push(`<p>${applyInline(escapeHTML(line))}</p>`);
+      }
+    }
+  }
+  flushList();
+  return out.join('');
 }
