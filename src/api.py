@@ -87,7 +87,7 @@ async def upload(file: UploadFile = File(...)):
         )
 
     content = await file.read()
-    dest = RAW_DIR / file.filename
+    dest = RAW_DIR / Path(file.filename).name
     dest.write_bytes(content)
 
     try:

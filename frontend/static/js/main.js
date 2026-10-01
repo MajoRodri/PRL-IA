@@ -356,8 +356,8 @@ function renderMarkdown(raw) {
   let listTag = null;
 
   const applyInline = (s) =>
-    s.replace(/\*\*(.*?)\*\*/g, (_, t) => `<strong>${escapeHTML(t)}</strong>`)
-     .replace(/_(.*?)_/g, (_, t) => `<em>${escapeHTML(t)}</em>`);
+    s.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+     .replace(/_(.*?)_/g, '<em>$1</em>');
 
   const flushList = () => { if (listTag) { out.push(`</${listTag}>`); listTag = null; } };
 
