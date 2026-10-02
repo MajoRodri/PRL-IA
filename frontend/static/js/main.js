@@ -1,10 +1,13 @@
 /* ── Lucide icons (static HTML) ───────────────────────────── */
-lucide.createIcons();
+if (typeof lucide !== 'undefined') lucide.createIcons();
 
 /* ── Inline SVGs for dynamically created content ──────────── */
 const ICON = {
-  assistant: `<img src="/static/img/icon.png" alt="PRL Assistant" style="width:100%;height:100%;object-fit:contain;" />`,
+  assistant: `<img src="/static/img/icon.png" alt="Paco" style="width:100%;height:100%;object-fit:contain;" />`,
   file:      `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`,
+  copy:      `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`,
+  check:     `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+  chevron:   `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>`,
 };
 
 /* ── Scroll reveal ────────────────────────────────────────── */
@@ -294,24 +297,47 @@ function appendMessage(role, text, sources = []) {
   const avatarContent = role === 'user' ? 'Tú' : ICON.assistant;
 
   const sourcesHTML = sources.length
-    ? `<div class="message__sources">
-        ${sources.map(s => `
-          <span class="source-badge">
-            ${ICON.file} ${escapeHTML(s.document)}${s.page ? ` · p.&nbsp;${s.page}` : ''}
-          </span>`).join('')}
-       </div>`
+    ? `<details class="message__sources-details">
+        <summary class="message__sources-summary">
+          ${ICON.chevron} Fuentes (${sources.length})
+        </summary>
+        <div class="message__sources">
+          ${sources.map(s => `
+            <span class="source-badge">
+              ${ICON.file} ${escapeHTML(s.document)}${s.page ? ` · p.&nbsp;${s.page}` : ''}
+            </span>`).join('')}
+        </div>
+       </details>`
+    : '';
+
+  const copyBtn = role === 'assistant'
+    ? `<button class="message__copy" title="Copiar respuesta" aria-label="Copiar respuesta">${ICON.copy}</button>`
     : '';
 
   const bubbleContent = role === 'assistant' ? renderMarkdown(text) : escapeHTML(text);
   el.innerHTML = `
     <div class="message__avatar" aria-hidden="true">${avatarContent}</div>
     <div class="message__body">
-      <div class="message__bubble">${bubbleContent}</div>
+      <div class="message__bubble">${bubbleContent}${copyBtn}</div>
       ${sourcesHTML}
     </div>`;
 
   chatMessages.appendChild(el);
   scrollToBottom();
+
+  const copyEl = el.querySelector('.message__copy');
+  if (copyEl) {
+    copyEl.addEventListener('click', () => {
+      navigator.clipboard.writeText(text).then(() => {
+        copyEl.innerHTML = ICON.check;
+        copyEl.classList.add('message__copy--copied');
+        setTimeout(() => {
+          copyEl.innerHTML = ICON.copy;
+          copyEl.classList.remove('message__copy--copied');
+        }, 2000);
+      });
+    });
+  }
 }
 
 function appendLoading() {

@@ -20,7 +20,7 @@ NO_CONTEXT_ANSWER = (
 
 # Prompt conversacional para saludos y preguntas fuera de tema (usado en la API).
 _NO_CONTEXT_PROMPT = (
-    "Eres PRL Assistant, un asistente conversacional especializado en Prevención de Riesgos "
+    "Eres Paco, un asistente conversacional especializado en Prevención de Riesgos "
     "Laborales (PRL) en España. Responde siempre en español y de forma amigable.\n\n"
     "El usuario ha enviado este mensaje: \"{question}\"\n\n"
     "Si es un saludo o mensaje casual, salúdale con naturalidad y explícale brevemente qué puedes "
