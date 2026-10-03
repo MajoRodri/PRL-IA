@@ -1,0 +1,311 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- ===================== HERO ===================== -->
+<section class="hero">
+  <video class="hero__video" autoplay muted playsinline aria-hidden="true" id="heroBanner">
+    <source src="{{ url_for('static', path='img/banner.mp4') }}" type="video/mp4" />
+  </video>
+  <div class="hero__overlay" aria-hidden="true"></div>
+  <div class="container">
+    <div class="hero__inner">
+      <span class="label">ASISTENTE INTELIGENTE DE PRL</span>
+      <h1 class="hero__title">
+        Consulta la normativa de
+        <span class="hero__highlight">Prevención de Riesgos con</span>
+         inteligencia artificial
+      </h1>
+      <p class="hero__subtitle">
+        Haz preguntas en lenguaje natural sobre legislación laboral, EPIs, riesgos eléctricos y más.
+        Respuestas fundamentadas en documentación oficial con trazabilidad total de fuentes.
+      </p>
+      <div class="hero__actions">
+        <a href="#chat" class="btn btn--primary">Hacer una consulta</a>
+        <a href="#como-funciona" class="btn btn--ghost">Ver cómo funciona</a>
+      </div>
+      <div class="hero__meta">
+        <span class="hero__meta-item">
+          <span class="hero__meta-dot" aria-hidden="true"></span>
+          9 documentos oficiales
+        </span>
+        <span class="hero__meta-item">
+          <span class="hero__meta-dot" aria-hidden="true"></span>
+          BOE + INSST
+        </span>
+        <span class="hero__meta-item">
+          <span class="hero__meta-dot" aria-hidden="true"></span>
+          Fuentes citadas en cada respuesta
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FEATURES ===================== -->
+<section class="features section" id="como-funciona">
+  <div class="container">
+    <div class="section-header">
+      <span class="label">CAPACIDADES</span>
+      <h2 class="section-title">Diseñado para profesionales de la prevención</h2>
+      <p class="section-desc">
+        Un sistema RAG que conecta tus preguntas con la documentación más relevante antes de generar una respuesta.
+      </p>
+    </div>
+    <div class="features__grid">
+
+      <div class="feature-card">
+        <div class="feature-card__icon" aria-hidden="true"><i data-lucide="search"></i></div>
+        <h3 class="feature-card__title">Búsqueda semántica</h3>
+        <p class="feature-card__desc">
+          Entiende el significado de tu pregunta, no solo las palabras clave. Recupera los fragmentos
+          más relevantes de toda la base documental.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card__icon" aria-hidden="true"><i data-lucide="shield-check"></i></div>
+        <h3 class="feature-card__title">Sin alucinaciones</h3>
+        <p class="feature-card__desc">
+          El modelo solo responde con información contenida en los documentos cargados. Si no dispone
+          de datos suficientes, lo indica explícitamente.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card__icon" aria-hidden="true"><i data-lucide="file-text"></i></div>
+        <h3 class="feature-card__title">Trazabilidad total</h3>
+        <p class="feature-card__desc">
+          Cada respuesta muestra el documento, la página y el fragmento exacto de donde proviene
+          la información para que puedas auditarla.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== STEPS ===================== -->
+<section class="steps section">
+  <div class="container">
+    <div class="section-header">
+      <span class="label">CÓMO FUNCIONA</span>
+      <h2 class="section-title">Tres pasos para obtener tu respuesta</h2>
+    </div>
+    <div class="steps__grid">
+
+      <div class="step">
+        <div class="step__number" aria-hidden="true">1</div>
+        <h3 class="step__title">Carga tu documento</h3>
+        <p class="step__desc">
+          Sube un PDF o TXT con normativa PRL. El sistema lo procesa, divide en fragmentos
+          y lo indexa automáticamente.
+        </p>
+      </div>
+
+      <div class="step__connector" aria-hidden="true"></div>
+
+      <div class="step">
+        <div class="step__number" aria-hidden="true">2</div>
+        <h3 class="step__title">Haz tu pregunta</h3>
+        <p class="step__desc">
+          Escribe tu consulta en lenguaje natural, como se la harías a un técnico de prevención.
+          Sin comandos ni sintaxis especial.
+        </p>
+      </div>
+
+      <div class="step__connector" aria-hidden="true"></div>
+
+      <div class="step">
+        <div class="step__number" aria-hidden="true">3</div>
+        <h3 class="step__title">Recibe respuesta con fuentes</h3>
+        <p class="step__desc">
+          Obtén una respuesta fundamentada con los fragmentos recuperados y los documentos
+          de origen citados junto a ella.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== DOCUMENTS ===================== -->
+<section class="documents section" id="documentos">
+  <div class="container">
+    <div class="section-header">
+      <span class="label">BASE DOCUMENTAL</span>
+      <h2 class="section-title">Corpus de documentación oficial</h2>
+      <p class="section-desc">
+        Todos los documentos provienen de fuentes oficiales: Boletín Oficial del Estado e Instituto
+        Nacional de Seguridad y Salud en el Trabajo.
+      </p>
+    </div>
+    <div class="documents__grid">
+
+      <div class="doc-card">
+        <div class="doc-card__icon" aria-hidden="true"><i data-lucide="book-open"></i></div>
+        <div>
+          <p class="doc-card__title">Ley 31/1995, de Prevención de Riesgos Laborales</p>
+          <span class="doc-card__source">BOE</span>
+        </div>
+      </div>
+
+      <div class="doc-card">
+        <div class="doc-card__icon" aria-hidden="true"><i data-lucide="book-open"></i></div>
+        <div>
+          <p class="doc-card__title">Real Decreto 39/1997, Reglamento de Servicios de Prevención</p>
+          <span class="doc-card__source">BOE</span>
+        </div>
+      </div>
+
+      <div class="doc-card">
+        <div class="doc-card__icon" aria-hidden="true"><i data-lucide="book-open"></i></div>
+        <div>
+          <p class="doc-card__title">Real Decreto 1627/1997, seguridad en obras de construcción</p>
+          <span class="doc-card__source">BOE</span>
+        </div>
+      </div>
+
+      <div class="doc-card">
+        <div class="doc-card__icon" aria-hidden="true"><i data-lucide="clipboard-list"></i></div>
+        <div>
+          <p class="doc-card__title">Guía Técnica para riesgos en obras de construcción</p>
+          <span class="doc-card__source">INSST</span>
+        </div>
+      </div>
+
+      <div class="doc-card">
+        <div class="doc-card__icon" aria-hidden="true"><i data-lucide="clipboard-list"></i></div>
+        <div>
+          <p class="doc-card__title">Guía Técnica para la utilización de EPIs</p>
+          <span class="doc-card__source">INSST</span>
+        </div>
+      </div>
+
+      <div class="doc-card">
+        <div class="doc-card__icon" aria-hidden="true"><i data-lucide="clipboard-list"></i></div>
+        <div>
+          <p class="doc-card__title">Guía Técnica para la utilización de Equipos de Trabajo</p>
+          <span class="doc-card__source">INSST</span>
+        </div>
+      </div>
+
+      <div class="doc-card">
+        <div class="doc-card__icon" aria-hidden="true"><i data-lucide="clipboard-list"></i></div>
+        <div>
+          <p class="doc-card__title">Guía Técnica para la protección frente al Riesgo Eléctrico</p>
+          <span class="doc-card__source">INSST</span>
+        </div>
+      </div>
+
+      <div class="doc-card">
+        <div class="doc-card__icon" aria-hidden="true"><i data-lucide="clipboard-list"></i></div>
+        <div>
+          <p class="doc-card__title">Guía Técnica sobre Señalización de Seguridad y Salud</p>
+          <span class="doc-card__source">INSST</span>
+        </div>
+      </div>
+
+      <div class="doc-card">
+        <div class="doc-card__icon" aria-hidden="true"><i data-lucide="clipboard-list"></i></div>
+        <div>
+          <p class="doc-card__title">Guía Técnica para riesgos en Lugares de Trabajo</p>
+          <span class="doc-card__source">INSST</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FLOATING CHAT ===================== -->
+<div class="chat-widget" id="chatWidget" aria-hidden="true">
+
+  <div class="chat-popup" id="chatPopup" role="dialog" aria-label="Asistente PRL" aria-hidden="true">
+    <div class="chat">
+
+      <div class="chat__header">
+        <img src="{{ url_for('static', path='img/icon.png') }}" alt="" class="chat__header-icon" aria-hidden="true" />
+        <span class="chat__header-title">PRL Assistant</span>
+        <span class="chat__status" title="En línea" aria-label="Estado: en línea"></span>
+        <button class="chat__expand" id="chatExpand" aria-label="Expandir chat">
+          <svg class="expand-icon expand-icon--expand" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/>
+            <line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>
+          </svg>
+          <svg class="expand-icon expand-icon--collapse" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/>
+            <line x1="10" y1="14" x2="3" y2="21"/><line x1="21" y1="3" x2="14" y2="10"/>
+          </svg>
+        </button>
+        <button class="chat__close" id="chatClose" aria-label="Cerrar asistente">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="chat__messages" id="chatMessages" role="log" aria-live="polite" aria-label="Conversación">
+        <div class="chat__welcome" id="chatWelcome">
+          <div class="chat__welcome-icon" aria-hidden="true">
+            <img src="{{ url_for('static', path='img/icon.png') }}" alt="" />
+          </div>
+          <h3>Hola, soy PRL Assistant</h3>
+          <p>
+            Consulta sobre riesgos laborales, EPIs, normativa vigente y más.<br />
+            Respondo basándome exclusivamente en documentación oficial.
+          </p>
+          <div class="chat__suggestions" role="list">
+            <button class="chat__suggestion" role="listitem">¿Qué medidas de protección debo adoptar al trabajar en altura?</button>
+            <button class="chat__suggestion" role="listitem">¿Cuáles son las obligaciones del empresario en materia de PRL?</button>
+            <button class="chat__suggestion" role="listitem">¿Qué EPIs son obligatorios para trabajos con riesgo eléctrico?</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat__upload">
+        <label class="upload-btn" for="fileUpload">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          Cargar documento
+        </label>
+        <input type="file" id="fileUpload" accept=".pdf,.txt" class="visually-hidden" aria-label="Cargar documento PDF o TXT" />
+        <span class="upload-hint">PDF o TXT</span>
+      </div>
+
+      <form class="chat__form" id="chatForm" autocomplete="off">
+        <label for="chatInput" class="visually-hidden">Escribe tu pregunta</label>
+        <input
+          type="text"
+          id="chatInput"
+          class="chat__input"
+          placeholder="Escribe tu pregunta sobre PRL..."
+          maxlength="500"
+        />
+        <button type="submit" class="btn btn--primary chat__submit" aria-label="Enviar pregunta">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+          <span class="chat__submit-label">Enviar</span>
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+  <button class="chat-fab" id="chatFab" aria-label="Abrir asistente PRL" aria-expanded="false">
+    <svg class="chat-fab__icon chat-fab__icon--open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </svg>
+    <svg class="chat-fab__icon chat-fab__icon--close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+    </svg>
+  </button>
+
+</div>
+
+{% endblock %}

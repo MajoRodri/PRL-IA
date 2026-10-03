@@ -26,8 +26,6 @@ templates = Jinja2Templates(directory=BASE_DIR / "frontend" / "templates")
 async def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
-
-
 class QueryRequest(BaseModel):
     question: str = Field(min_length=1, max_length=2000)
     k: int = Field(default=4, ge=1, le=20)
