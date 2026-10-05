@@ -4,11 +4,13 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-from fastapi import FastAPI, Request, UploadFile, File
+from fastapi import FastAPI, Request, UploadFile, File, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+
+from src.rag_chain import answer_query
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 RAW_DIR = BASE_DIR / "data" / "raw"
@@ -32,7 +34,8 @@ async def index(request: Request):
 
 # ── Models ───────────────────────────────────────────────────
 class QueryRequest(BaseModel):
-    question: str
+    question: str = Field(min_length=1, max_length=2000)
+    k: int = Field(default=4, ge=1, le=20)
 
 
 # ── Helpers ──────────────────────────────────────────────────
@@ -68,12 +71,15 @@ def _index_document(path: Path) -> int:
 @app.post("/api/query")
 async def query(body: QueryRequest):
     try:
-        from src.rag_chain import answer_query
-        result = answer_query(body.question)
+        result = answer_query(body.question, k=body.k)
         return JSONResponse(result)
-    except Exception as exc:
-        logger.exception("Error en /api/query: %s", exc)
-        return JSONResponse({"answer": "", "sources": [], "abstained": True})
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(
+            status_code=503,
+            detail="No se ha podido generar la respuesta.",
+        ) from exc
 
 
 @app.post("/api/upload")
