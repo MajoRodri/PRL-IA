@@ -226,7 +226,7 @@
 
       <div class="chat__header">
         <img src="{{ url_for('static', path='img/icon.png') }}" alt="" class="chat__header-icon" aria-hidden="true" />
-        <span class="chat__header-title">PRL Assistant</span>
+        <span class="chat__header-title">Paco</span>
         <span class="chat__status" title="En línea" aria-label="Estado: en línea"></span>
         <button class="chat__expand" id="chatExpand" aria-label="Expandir chat">
           <svg class="expand-icon expand-icon--expand" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -250,16 +250,11 @@
           <div class="chat__welcome-icon" aria-hidden="true">
             <img src="{{ url_for('static', path='img/icon.png') }}" alt="" />
           </div>
-          <h3>Hola, soy PRL Assistant</h3>
+          <h3>Hola, soy Paco</h3>
           <p>
             Consulta sobre riesgos laborales, EPIs, normativa vigente y más.<br />
             Respondo basándome exclusivamente en documentación oficial.
           </p>
-          <div class="chat__suggestions" role="list">
-            <button class="chat__suggestion" role="listitem">¿Qué medidas de protección debo adoptar al trabajar en altura?</button>
-            <button class="chat__suggestion" role="listitem">¿Cuáles son las obligaciones del empresario en materia de PRL?</button>
-            <button class="chat__suggestion" role="listitem">¿Qué EPIs son obligatorios para trabajos con riesgo eléctrico?</button>
-          </div>
         </div>
       </div>
 
@@ -270,9 +265,8 @@
             <polyline points="17 8 12 3 7 8"/>
             <line x1="12" y1="3" x2="12" y2="15"/>
           </svg>
-          Cargar documento
         </label>
-        <input type="file" id="fileUpload" accept=".pdf,.txt" class="visually-hidden" aria-label="Cargar documento PDF o TXT" />
+        <input type="file" id="fileUpload" accept=".pdf,.txt" multiple class="visually-hidden" aria-label="Cargar documentos PDF o TXT" />
         <span class="upload-hint">PDF o TXT</span>
       </div>
 

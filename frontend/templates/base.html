@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{% block title %}PRL Assistant — Consulta normativa de riesgos laborales con IA{% endblock %}</title>
+  <title>{% block title %}PreventIA - Consulta normativa de riesgos laborales con IA{% endblock %}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="{{ url_for('static', path='css/styles.css') }}" />
+  <link rel="icon" type="image/png" href="{{ url_for('static', path='img/icon.png') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', path='css/styles.css') }}?v=4" />
   {% block head %}{% endblock %}
 </head>
 <body>
@@ -32,14 +33,14 @@
   <footer class="footer">
     <div class="container footer__inner">
       <p class="footer__disclaimer">
-        PRL Assistant es una herramienta informativa. No sustituye a técnicos de prevención ni a protocolos oficiales.
+        PreventIA es una herramienta informativa. No sustituye a técnicos de prevención ni a protocolos oficiales.
       </p>
       <p class="footer__copy">Proyecto académico · Módulo V AI Engineering</p>
     </div>
   </footer>
 
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-  <script src="{{ url_for('static', path='js/main.js') }}"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" onerror="window.lucide=null"></script>
+  <script src="{{ url_for('static', path='js/main.js') }}?v=4"></script>
   {% block scripts %}{% endblock %}
 </body>
 </html>

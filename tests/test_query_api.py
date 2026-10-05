@@ -12,19 +12,17 @@ def test_query_success(monkeypatch):
     expected = {
         "answer": "Utiliza los equipos de protección adecuados.",
         "sources": [
-            {
-                "text": "El uso de casco es obligatorio en esta zona.",
-                "metadata": {"source": "manual.pdf", "page": 3},
-            }
+            {"document": "manual.pdf", "page": 3, "chunk": "El uso de casco es obligatorio en esta zona."}
         ],
+        "abstained": False,
     }
 
-    def fake_answer_question(question, k=4):
+    def fake_answer_query(question, k=4):
         assert question == "¿Qué EPI debo utilizar?"
         assert k == 4
         return expected
 
-    monkeypatch.setattr(api, "answer_question", fake_answer_question)
+    monkeypatch.setattr(api, "answer_query", fake_answer_query)
 
     response = client.post(
         "/api/query",
@@ -32,35 +30,31 @@ def test_query_success(monkeypatch):
     )
 
     assert response.status_code == 200
-    assert response.json() == {
-        "answer": expected["answer"],
-        "sources": expected["sources"],
-        "abstained": False,
-    }
+    assert response.json() == expected
 
 
-def test_query_abstains_without_sources(monkeypatch):
-    """La API se abstiene si no hay fuentes relevantes."""
+def test_query_no_relevant_docs(monkeypatch):
+    """La API responde conversacionalmente cuando no hay fuentes relevantes."""
 
-    def fake_answer_question(question, k=4):
+    def fake_answer_query(question, k=4):
         return {
-            "answer": "No hay información suficiente en la documentación.",
+            "answer": "Hola, soy Paco. Puedo ayudarte con dudas sobre PRL.",
             "sources": [],
+            "abstained": False,
         }
 
-    monkeypatch.setattr(api, "answer_question", fake_answer_question)
+    monkeypatch.setattr(api, "answer_query", fake_answer_query)
 
     response = client.post(
         "/api/query",
-        json={"question": "Pregunta sin documentación"},
+        json={"question": "Hola, ¿qué puedes hacer?"},
     )
 
     assert response.status_code == 200
-    assert response.json() == {
-        "answer": "No hay información suficiente en la documentación.",
-        "sources": [],
-        "abstained": True,
-    }
+    data = response.json()
+    assert data["sources"] == []
+    assert data["abstained"] is False
+    assert data["answer"]
 
 
 def test_query_invalid_question():
@@ -88,10 +82,10 @@ def test_query_invalid_k():
 def test_query_rag_error(monkeypatch):
     """La API devuelve 503 si falla el servicio RAG."""
 
-    def fake_answer_question(question, k=4):
+    def fake_answer_query(question, k=4):
         raise RuntimeError("Error interno del servicio RAG")
 
-    monkeypatch.setattr(api, "answer_question", fake_answer_question)
+    monkeypatch.setattr(api, "answer_query", fake_answer_query)
 
     response = client.post(
         "/api/query",
