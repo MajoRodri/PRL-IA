@@ -383,7 +383,7 @@ function renderMarkdown(raw) {
 
   const applyInline = (s) =>
     s.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-     .replace(/_(.*?)_/g, '<em>$1</em>');
+     .replace(/(?<![a-zA-Z0-9_])_(.*?)_(?![a-zA-Z0-9_])/g, '<em>$1</em>');
 
   const flushList = () => { if (listTag) { out.push(`</${listTag}>`); listTag = null; } };
 
