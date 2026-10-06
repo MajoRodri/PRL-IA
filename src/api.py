@@ -40,12 +40,21 @@ class QueryRequest(BaseModel):
 
 # ── Helpers ──────────────────────────────────────────────────
 def _index_document(path: Path) -> int:
-    """Carga, fragmenta e indexa un documento en ChromaDB. Devuelve nº de chunks."""
-    from src.ingestion import load_document
+    """Carga, fragmenta e indexa un documento en ChromaDB. Devuelve nº de chunks.
+
+    Si ya existían chunks del mismo archivo, los reemplaza de forma atómica:
+    borra los anteriores e inserta los nuevos. Si la inserción falla, restaura
+    los chunks originales antes de propagar la excepción.
+    """
+    from src.ingestion import load_document, EmptyDocumentError
     from src.chunking import split_documents
     from src.vector_store import get_collection
 
-    pages = load_document(path)
+    try:
+        pages = load_document(path)
+    except EmptyDocumentError:
+        return 0
+
     try:
         chunks = split_documents(pages)
     except ValueError:
@@ -54,6 +63,7 @@ def _index_document(path: Path) -> int:
     if not chunks:
         return 0
 
+    filename = path.name
     ids = [chunk["metadata"]["chunk_id"] for chunk in chunks]
     texts = [chunk["text"] for chunk in chunks]
     metadatas = [
@@ -66,7 +76,21 @@ def _index_document(path: Path) -> int:
     ]
 
     collection = get_collection()
-    collection.upsert(ids=ids, documents=texts, metadatas=metadatas)
+
+    # Guardar versión anterior para poder hacer rollback si la inserción falla.
+    old = collection.get(where={"source": filename})
+    old_ids, old_texts, old_metas = old["ids"], old["documents"], old["metadatas"]
+
+    if old_ids:
+        collection.delete(ids=old_ids)
+
+    try:
+        collection.upsert(ids=ids, documents=texts, metadatas=metadatas)
+    except Exception:
+        if old_ids:
+            collection.upsert(ids=old_ids, documents=old_texts, metadatas=old_metas)
+        raise
+
     return len(chunks)
 
 
