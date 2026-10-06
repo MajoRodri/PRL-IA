@@ -46,7 +46,10 @@ def _index_document(path: Path) -> int:
     from src.vector_store import get_collection
 
     pages = load_document(path)
-    chunks = split_documents(pages)
+    try:
+        chunks = split_documents(pages)
+    except ValueError:
+        return 0
 
     if not chunks:
         return 0
@@ -88,7 +91,7 @@ async def upload(file: UploadFile = File(...)):
     ext = Path(file.filename).suffix.lower()
     if ext not in allowed:
         return JSONResponse(
-            {"error": "Formato no admitido. Usa PDF o TXT."},
+            {"error": "Formato no admitido. Solo se permiten archivos PDF y TXT."},
             status_code=400,
         )
 
@@ -99,6 +102,12 @@ async def upload(file: UploadFile = File(...)):
     try:
         loop = asyncio.get_running_loop()
         n_chunks = await loop.run_in_executor(None, _index_document, dest)
+        if n_chunks == 0:
+            dest.unlink(missing_ok=True)
+            return JSONResponse(
+                {"error": "El archivo está vacío o no contiene texto procesable."},
+                status_code=422,
+            )
         return JSONResponse({
             "filename": file.filename,
             "message": f'"{file.filename}" indexado correctamente ({n_chunks} fragmentos).',

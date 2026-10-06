@@ -214,7 +214,12 @@ function uploadWithProgress(file, onProgress) {
         try { resolve(JSON.parse(xhr.responseText)); }
         catch { resolve({}); }
       } else {
-        reject(new Error(`HTTP ${xhr.status}`));
+        try {
+          const body = JSON.parse(xhr.responseText);
+          reject(new Error(body.error ?? `HTTP ${xhr.status}`));
+        } catch {
+          reject(new Error(`HTTP ${xhr.status}`));
+        }
       }
     });
     xhr.addEventListener('error', () => reject(new Error('Error de red')));
@@ -278,9 +283,12 @@ fileUpload?.addEventListener('change', async () => {
       const data = await uploadWithProgress(file, (pct) => progress.setProgress(pct));
       progress.remove();
       appendMessage('assistant', data.message ?? `"${file.name}" indexado correctamente.`);
-    } catch {
+    } catch (err) {
       progress.remove();
-      appendMessage('assistant', `No se pudo procesar "${file.name}". Comprueba el formato e inténtalo de nuevo.`);
+      const msg = (err.message && !err.message.startsWith('HTTP') && err.message !== 'Error de red')
+        ? err.message
+        : `No se pudo procesar "${file.name}". Comprueba el formato e inténtalo de nuevo.`;
+      appendMessage('assistant', msg);
     }
   }
 });
