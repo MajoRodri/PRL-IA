@@ -798,6 +798,37 @@ button { font-family: var(--font); }
 .message__bubble p:first-child { margin-top: 0; }
 .message__bubble p:last-child  { margin-bottom: 0; }
 
+/* Markdown tables */
+.md-table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: var(--s8) 0;
+  font-size: 0.88em;
+}
+.md-table th,
+.md-table td {
+  border: 1px solid var(--border, #d1d9e8);
+  padding: var(--s4) var(--s8);
+  text-align: left;
+  vertical-align: top;
+}
+.md-table th {
+  background: var(--blue-light, #e8eef8);
+  font-weight: 600;
+  color: var(--navy);
+}
+.md-table tr:nth-child(even) td { background: #f5f8ff; }
+
+/* Markdown headings inside bubble */
+.md-heading {
+  margin: var(--s8) 0 var(--s4);
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.3;
+}
+h4.md-heading { font-size: 0.95em; }
+h5.md-heading { font-size: 0.88em; }
+
 /* Copy button — inside bubble, bottom-right corner */
 .message__bubble {
   position: relative;

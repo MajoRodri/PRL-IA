@@ -388,6 +388,7 @@ function renderMarkdown(raw) {
   const lines = String(raw).split('\n');
   const out = [];
   let listTag = null;
+  let tableRows = [];
 
   const applyInline = (s) =>
     s.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
@@ -395,10 +396,37 @@ function renderMarkdown(raw) {
 
   const flushList = () => { if (listTag) { out.push(`</${listTag}>`); listTag = null; } };
 
+  const isSeparatorRow = (l) => /^\|[\s\-|:]+\|$/.test(l.trim());
+
+  const flushTable = () => {
+    if (!tableRows.length) return;
+    const rows = tableRows.filter(l => !isSeparatorRow(l));
+    if (rows.length) {
+      out.push('<table class="md-table">');
+      rows.forEach((row, i) => {
+        const cells = row.trim().replace(/^\||\|$/g, '').split('|');
+        const tag = i === 0 ? 'th' : 'td';
+        out.push('<tr>' + cells.map(c => `<${tag}>${applyInline(escapeHTML(c.trim()))}</${tag}>`).join('') + '</tr>');
+      });
+      out.push('</table>');
+    }
+    tableRows = [];
+  };
+
   for (const raw_line of lines) {
     const line = raw_line.trimEnd();
+
+    if (line.trim().startsWith('|')) {
+      flushList();
+      tableRows.push(line);
+      continue;
+    }
+
+    flushTable();
+
     const ulMatch = line.match(/^[\-\*•]\s+(.+)/);
     const olMatch = line.match(/^\d+[.)]\s+(.+)/);
+    const hMatch  = line.match(/^(#{1,3})\s+(.+)/);
 
     if (ulMatch) {
       if (listTag !== 'ul') { flushList(); out.push('<ul>'); listTag = 'ul'; }
@@ -410,11 +438,15 @@ function renderMarkdown(raw) {
       flushList();
       if (line.trim() === '') {
         out.push('<br>');
+      } else if (hMatch) {
+        const lvl = Math.min(hMatch[1].length + 2, 6);
+        out.push(`<h${lvl} class="md-heading">${applyInline(escapeHTML(hMatch[2]))}</h${lvl}>`);
       } else {
         out.push(`<p>${applyInline(escapeHTML(line))}</p>`);
       }
     }
   }
   flushList();
+  flushTable();
   return out.join('');
 }
