@@ -67,7 +67,7 @@ def test_answer_question_includes_context_in_prompt(fragments):
     assert "El uso del casco es obligatorio" in prompt
     assert "manual_prl.pdf" in prompt
     assert "Página: 5" in prompt
-    assert "exclusivamente" in prompt
+    assert "normativa PRL" in prompt
 
 
 def test_answer_question_empty_retrieval():

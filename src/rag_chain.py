@@ -30,7 +30,7 @@ _NO_CONTEXT_PROMPT = (
     "y redirigele hacia ese tema. Sé breve y cercano."
 )
 
-_RELEVANCE_THRESHOLD = 0.5
+_RELEVANCE_THRESHOLD = 0.72
 
 
 def _format_context(fragments: list[dict]) -> str:
@@ -141,11 +141,16 @@ def answer_query(question: str, k: int = 8) -> dict:
 
     relevant_hits = [h for h in hits if h.get("distance", 1) <= _RELEVANCE_THRESHOLD]
 
-    if not relevant_hits:
+    # No hits at all → pure conversational (empty collection or off-topic greeting)
+    if not hits:
         answer = generate_response(_NO_CONTEXT_PROMPT.format(question=question.strip()))
         return {"answer": answer, "sources": [], "abstained": False}
 
-    context = _format_context(relevant_hits)
+    # Some hits exist but none crossed the threshold → use best k=4 anyway so RAG
+    # can still answer PRL questions that were diluted by a greeting prefix.
+    rag_hits = relevant_hits if relevant_hits else hits[:4]
+
+    context = _format_context(rag_hits)
     prompt = _build_prompt(question.strip(), context)
 
     try:
@@ -162,7 +167,7 @@ def answer_query(question: str, k: int = 8) -> dict:
             "page": h["metadata"].get("page", 0),
             "chunk": h["text"][:300],
         }
-        for h in relevant_hits
+        for h in rag_hits
     ]
 
     return {"answer": answer.strip(), "sources": sources, "abstained": False}

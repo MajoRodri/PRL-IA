@@ -17,9 +17,9 @@ def test_query_success(monkeypatch):
         "abstained": False,
     }
 
-    def fake_answer_query(question, k=4):
+    def fake_answer_query(question, k=8):
         assert question == "¿Qué EPI debo utilizar?"
-        assert k == 4
+        assert k == 8
         return expected
 
     monkeypatch.setattr(api, "answer_query", fake_answer_query)
