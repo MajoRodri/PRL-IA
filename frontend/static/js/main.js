@@ -391,7 +391,8 @@ function renderMarkdown(raw) {
   let tableRows = [];
 
   const applyInline = (s) =>
-    s.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    s.replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>')
+     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
      .replace(/(?<![a-zA-Z0-9_])_(.*?)_(?![a-zA-Z0-9_])/g, '<em>$1</em>')
      .replace(/`([^`\n]+)`/g, '<code class="md-code">$1</code>')
      .replace(/&lt;br\s*\/?&gt;/gi, '<br>');
@@ -427,8 +428,8 @@ function renderMarkdown(raw) {
     flushTable();
 
     const trimmed = line.trim();
-    const ulMatch = line.match(/^[\-\*•]\s+(.+)/);
-    const olMatch = line.match(/^\d+[.)]\s+(.+)/);
+    const ulMatch = trimmed.match(/^[\-\*•]\s+(.+)/);
+    const olMatch = trimmed.match(/^\d+[.)]\s+(.+)/);
     const hMatch  = line.match(/^(#{1,3})\s+(.+)/);
     const bqMatch = line.match(/^>\s*(.*)/);
     const isHR    = /^(\-{3,}|\*{3,}|_{3,})$/.test(trimmed);
