@@ -35,7 +35,7 @@ async def index(request: Request):
 # ── Models ───────────────────────────────────────────────────
 class QueryRequest(BaseModel):
     question: str = Field(min_length=1, max_length=2000)
-    k: int = Field(default=4, ge=1, le=20)
+    k: int = Field(default=8, ge=1, le=20)
 
 
 # ── Helpers ──────────────────────────────────────────────────
@@ -66,14 +66,15 @@ def _index_document(path: Path) -> int:
     filename = path.name
     ids = [chunk["metadata"]["chunk_id"] for chunk in chunks]
     texts = [chunk["text"] for chunk in chunks]
-    metadatas = [
-        {
-            "source": chunk["metadata"]["document"],
-            "page": int(chunk["metadata"]["page"]),
-            "section": chunk["metadata"].get("section") or "",
-        }
-        for chunk in chunks
-    ]
+
+    # Pass through all scalar metadata; use document name as source (not full path).
+    _SCALAR = (str, int, float, bool)
+    metadatas = []
+    for chunk in chunks:
+        meta = {k: v for k, v in chunk["metadata"].items()
+                if k != "source" and isinstance(v, _SCALAR)}
+        meta["source"] = chunk["metadata"].get("document", filename)
+        metadatas.append(meta)
 
     collection = get_collection()
 

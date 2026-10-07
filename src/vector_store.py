@@ -13,10 +13,13 @@ Al ejecutarse localmente, evita enviar contenido documental a terceros,
 lo cual refuerza la privacidad de la información de la empresa.
 """
 
+from pathlib import Path
+
 import chromadb
 from chromadb.utils import embedding_functions
 
-CHROMA_PERSIST_DIR = "./chroma_db"
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent
+CHROMA_PERSIST_DIR = str(_PROJECT_ROOT / "chroma_db")
 COLLECTION_NAME = "prl_documentos"
 EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2"
 
