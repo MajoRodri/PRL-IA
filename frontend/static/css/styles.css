@@ -829,6 +829,32 @@ button { font-family: var(--font); }
 h4.md-heading { font-size: 0.95em; }
 h5.md-heading { font-size: 0.88em; }
 
+/* Inline code */
+.md-code {
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--navy);
+  border-radius: 3px;
+  padding: 0.1em 0.35em;
+  font-family: ui-monospace, 'Cascadia Code', monospace;
+  font-size: 0.88em;
+}
+
+/* Blockquote */
+.md-quote {
+  border-left: 3px solid var(--blue);
+  margin: var(--s8) 0;
+  padding: var(--s4) var(--s12);
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* Horizontal rule */
+.md-hr {
+  border: none;
+  border-top: 1px solid var(--border, #d1d9e8);
+  margin: var(--s12) 0;
+}
+
 /* Copy button — inside bubble, bottom-right corner */
 .message__bubble {
   position: relative;

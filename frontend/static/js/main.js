@@ -393,6 +393,7 @@ function renderMarkdown(raw) {
   const applyInline = (s) =>
     s.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
      .replace(/(?<![a-zA-Z0-9_])_(.*?)_(?![a-zA-Z0-9_])/g, '<em>$1</em>')
+     .replace(/`([^`\n]+)`/g, '<code class="md-code">$1</code>')
      .replace(/&lt;br\s*\/?&gt;/gi, '<br>');
 
   const flushList = () => { if (listTag) { out.push(`</${listTag}>`); listTag = null; } };
@@ -425,9 +426,12 @@ function renderMarkdown(raw) {
 
     flushTable();
 
+    const trimmed = line.trim();
     const ulMatch = line.match(/^[\-\*•]\s+(.+)/);
     const olMatch = line.match(/^\d+[.)]\s+(.+)/);
     const hMatch  = line.match(/^(#{1,3})\s+(.+)/);
+    const bqMatch = line.match(/^>\s*(.*)/);
+    const isHR    = /^(\-{3,}|\*{3,}|_{3,})$/.test(trimmed);
 
     if (ulMatch) {
       if (listTag !== 'ul') { flushList(); out.push('<ul>'); listTag = 'ul'; }
@@ -437,11 +441,15 @@ function renderMarkdown(raw) {
       out.push(`<li>${applyInline(escapeHTML(olMatch[1]))}</li>`);
     } else {
       flushList();
-      if (line.trim() === '') {
+      if (trimmed === '') {
         out.push('<br>');
       } else if (hMatch) {
         const lvl = Math.min(hMatch[1].length + 2, 6);
         out.push(`<h${lvl} class="md-heading">${applyInline(escapeHTML(hMatch[2]))}</h${lvl}>`);
+      } else if (isHR) {
+        out.push('<hr class="md-hr">');
+      } else if (bqMatch) {
+        out.push(`<blockquote class="md-quote">${applyInline(escapeHTML(bqMatch[1]))}</blockquote>`);
       } else {
         out.push(`<p>${applyInline(escapeHTML(line))}</p>`);
       }
