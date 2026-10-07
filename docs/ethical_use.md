@@ -51,4 +51,4 @@ La interfaz debe ofrecer las fuentes y reconocer falta de información. Ante fue
 - Carga de archivo malicioso, intento de rutas externas y ausencia de texto extraíble.
 - Eliminación y verificación de que ya no aparece en recuperación.
 
-Los tests de P5 cubren controles técnicos locales, no una auditoría de seguridad ni validación profesional de PRL.
+Los tests cubren controles técnicos locales, no una auditoría de seguridad ni validación profesional de PRL.

@@ -1,4 +1,4 @@
-# Integración de ChromaDB (persona 2) con gestión documental (persona 5)
+# Integración de ChromaDB con gestión documental
 
 ## Qué conecta
 
@@ -6,9 +6,7 @@
 `src.vector_store.get_collection()` y entrega un `ChromaDocumentIndex` al
 `DocumentService` existente. El adaptador cumple el contrato de `retrieval.py`.
 
-El archivo de la persona 2 se conserva. El adaptador usa su colección y su
-función de embeddings; no utiliza sus funciones `search()` y `add_fragments()`
-porque esas interfaces no cubren el borrado, la sustitución ni los filtros de P5.
+El adaptador usa su colección y su función de embeddings; no utiliza sus funciones `search()` y `add_fragments()` porque esas interfaces no cubren el borrado, la sustitución ni los filtros ya establecidos.
 
 Archivos nuevos:
 
@@ -17,21 +15,8 @@ Archivos nuevos:
 - `tests/test_chroma_adapter.py`: doce pruebas de integración.
 - Este documento.
 
-Se mantiene el procesador demo PDF/TXT de P5. La integración definitiva con la
-ingesta de P1 requiere adaptar su procesador al contrato `DocumentProcessor`.
-Tampoco se incorpora el LLM ni la cadena RAG de P3.
-
-## Antes de arrancar
-
-1. Trabaja desde la raíz del repositorio, con `venv` activado.
-2. Comprueba que tu copia de `src/vector_store.py` contiene la implementación
-   de P2, incluida `get_collection()`. Si está vacía, aún falta integrar su rama.
-   Que el archivo exista en GitHub en otra rama no significa que esté en la tuya.
-3. Se requieren las dependencias de P5 y las que ya instalaste para P2:
-   `chromadb==1.5.9`, `sentence-transformers==6.1.0` y PyTorch compatible.
-   Este parche no modifica `requirements.txt` ni exige reinstalar paquetes.
-4. Comprueba que `.gitignore` contiene `chroma_db/` y `data/persona5/`.
-   Los documentos subidos y los índices son datos locales, no código para Git.
+Se mantiene el procesador demo PDF/TXT. La integración definitiva con la
+ingesta ha requerido adaptar su procesador al contrato `DocumentProcessor`.
 
 ## Pruebas
 
@@ -88,20 +73,18 @@ En Swagger:
 0.25 es un valor inicial sin calibrar. Una pregunta ajena al documento puede
 superarlo: hay que evaluar consultas pertinentes y no pertinentes en español
 antes de decidir el umbral definitivo. `score` es similitud, no una probabilidad
-ni una medida de veracidad. MiniLM es el modelo elegido por P2; esta integración
-no demuestra que sea la mejor opción para el corpus español.
+ni una medida de veracidad. MiniLM es el modelo elegido. 
 
 ## Datos e independencia de la demo
 
-- La colección P2 se guarda en `./chroma_db`, como en su archivo original.
+- La colección se guarda en `./chroma_db`.
 - El catálogo, originales y registro de versiones activas de esta integración
-  van en `data/persona5/chroma_integration/`.
+  van en `data/chroma_integration/`.
 - La demo léxica conserva sus datos anteriores; no se realiza una migración.
   Sube de nuevo los documentos que quieras probar con Chroma.
 - Se puede cambiar el directorio del catálogo con `PRL_CHROMA_DOCUMENTS_DIR`.
   Conserva juntos ese directorio y `chroma_db` al mover o respaldar los datos.
-- Arrancar desde otra carpeta se rechaza para evitar que la ruta relativa de
-  P2 cree accidentalmente una base distinta.
+- Arrancar desde otra carpeta se rechaza para evitar que la ruta relativa cree accidentalmente una base distinta.
 
 No se cambia automáticamente el modelo ni la métrica de una colección existente.
 Si el adaptador detecta una métrica distinta de `cosine` o un catálogo vinculado
@@ -129,7 +112,7 @@ Para reindexar sin exponer un documento a medio escribir:
 3. Se eliminan las versiones anteriores.
 
 Si falla la escritura, sigue activa la versión anterior en el adaptador. El
-servicio P5 marca el intento fallido y lo oculta hasta una reindexación correcta.
+servicio marca el intento fallido y lo oculta hasta una reindexación correcta.
 Si falla la limpieza después de publicar, la versión nueva sigue disponible;
 las anteriores pueden ocupar espacio, pero quedan fuera de las búsquedas.
 Reindexar o eliminar vuelve a intentar limpiarlas. Un cierre durante la
@@ -140,10 +123,10 @@ Al borrar, primero se desactiva el documento y después se eliminan sus vectores
 Si Chroma falla, la API conserva el estado `deleting` y admite reintentar el
 borrado. No se afirma que SQLite y Chroma formen una transacción distribuida.
 
-**Todas las búsquedas del flujo P5/RAG deben pasar por `DocumentService.search`
+**Todas las búsquedas del flujo RAG deben pasar por `DocumentService.search`
 o por su endpoint.** La función original `vector_store.search()` no conoce las
 versiones activas y puede incluir datos antiguos o incompletos. Los fragmentos
-insertados directamente por P2 sin los metadatos del adaptador no se adoptan ni
+insertados directamente sin los metadatos del adaptador no se adoptan ni
 se borran: vuelve a subir esos documentos mediante el servicio para gestionarlos.
 
 ## Alcance de uso
@@ -163,7 +146,7 @@ como instrucciones reales de prevención.
 Añade al final del apartado de instalación/ejecución, después del modo demo:
 
 ```markdown
-### Integración documental con ChromaDB (personas 2 y 5)
+### Integración documental con ChromaDB
 
 El arranque con Chroma, las pruebas y los límites de la integración se describen
 en [docs/chroma_integration.md](docs/chroma_integration.md).

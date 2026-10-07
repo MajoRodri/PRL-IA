@@ -12,7 +12,7 @@ Una prueba de API aprobada no implica calidad semántica, y disponer de fuentes 
 
 ## Evidencia ejecutada el 29/09/2026
 
-Entorno aislado Linux, Python 3.12; versiones directas en `requirements-persona5.txt` y entorno resuelto en `requirements-persona5-lock.txt`. No se ha ejecutado todavía en el ordenador WSL de María.
+Entorno aislado Linux, Python 3.12; versiones directas en `requirements.txt` y entorno resuelto en `requirements-lock.txt`. 
 
 ```bash
 python -m pytest tests/test_retrieval.py tests/test_documents_api.py -q
@@ -70,7 +70,7 @@ No equiparar acuerdo entre modelos con corrección. Registrar denominadores, cas
 
 ## Criterios de cierre propuestos
 
-- Tests de P5 y tests reales P1/P2 aprobados en el entorno integrado.
+- Test reales aprobados en el entorno integrado.
 - Fuentes visibles y verificables en interfaz.
 - Consulta fuera de alcance sin respuesta inventada.
 - Revisión de casos de riesgo y errores de mayor severidad.

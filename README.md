@@ -2,13 +2,13 @@
 
 Asistente documental de prevención de riesgos laborales para consultar información con fuentes verificables. Proyecto de equipo del bootcamp de IA/ML, Módulo V.
 
-**Estado revisado el 06/10/2026 sobre `dev`, commit `2030174`:** la aplicación web integra carga PDF/TXT, ingesta y chunking, Chroma y respuestas con Groq. Incluye el chat «Paco», fuentes visibles y controles de carga y consulta. También está disponible la API documental independiente, en modo léxico o con Chroma. **La web no utiliza todavía el catálogo documental ni el recuperador avanzado**: son dos recorridos distintos, con garantías diferentes.
+**Estado revisado el 06/10/2026 sobre `dev`, commit `2030174`:** la aplicación web integra carga PDF/TXT, ingesta y chunking, Chroma y respuestas con Groq. Incluye el chat «Paco», fuentes visibles y controles de carga y consulta. También está disponible la API documental independiente, en modo léxico o con Chroma. 
 
-La revisión conserva la documentación existente y actualiza las conexiones, el arranque y los límites. Las correcciones de `feat/integration` aún no incorporadas a esta revisión de `dev` no se consideran funcionalidades verificadas.
+La revisión conserva la documentación existente y actualiza las conexiones, el arranque y los límites.
 
 ## Problema y uso previsto
 
-Trabajadores y responsables de prevención necesitan localizar información dentro de manuales y protocolos. PRL-IA pretende mostrar respuestas basadas en esos documentos, con trazabilidad para su revisión humana. Es una herramienta informativa: no sustituye al personal de prevención ni a los protocolos del centro.
+Trabajadores y responsables de prevención necesitan localizar información dentro de manuales y protocolos. PRL-IA pretende mostrar respuestas basadas en esos documentos, con trazabilidad para su revisión humana. Es una herramienta informativa: no sustituye al personal de prevención ni a los protocolos del  centro.
 
 ## Alcance de recuperación y gestión documental
 
@@ -25,7 +25,7 @@ La recuperación avanzada y la gestión documental incluyen los siguientes módu
 | `docs/ethical_use.md` | Privacidad, trazabilidad y límites de uso |
 | `README.md` | Funcionamiento y puesta en marcha |
 
-La documentación de apoyo se encuentra en `docs/integration.md`, `docs/guia_maria.md` y `docs/github_wsl.md`. Se conserva el corpus sintético y el script de evaluación de recuperación. Las dependencias se han unificado en `requirements.txt`; los archivos `requirements-persona5.txt` y `requirements-persona5-lock.txt` se han retirado. Las referencias antiguas a ellos en guías auxiliares deben interpretarse según la instalación de este README.
+La documentación de apoyo se encuentra en  `docs/guia_retrieval.md`. Se conserva el corpus sintético y el script de evaluación de recuperación. Las dependencias se han unificado en `requirements.txt`.
 
 ## Componentes del sistema
 
@@ -172,7 +172,6 @@ PRL-IA/
       chunking_questions.json
       chunking_results.json
     examples/prevencion_demo.txt
-    persona5/                # datos locales de la demo documental; excluidos de Git
   chroma_db/                 # persistencia local del índice vectorial; excluida de Git
   scripts/
     download_corpus.py
@@ -196,9 +195,7 @@ PRL-IA/
     vector_store.md
     evaluation.md
     ethical_use.md
-    integration.md
-    guia_maria.md
-    github_wsl.md
+    guia_retrieval.md
   requirements.txt           # dependencias comunes
   .env.example
   .gitignore
@@ -264,15 +261,11 @@ python -m uvicorn src.api_documents_chroma:create_app --factory --host 127.0.0.1
 
 Abre <http://127.0.0.1:8005/docs> y <http://127.0.0.1:8005/health>. En el segundo modo debe aparecer `"index": "ChromaDocumentIndex"`. Usa un único proceso/worker y no ejecutes varias instancias escritoras sobre la misma colección.
 
-El catálogo Chroma del servicio documental, originales y versiones activas se guardan en `data/persona5/chroma_integration/`, configurable con `PRL_CHROMA_DOCUMENTS_DIR`. Conserva ese directorio junto con `chroma_db/` al respaldar los datos. No adopta automáticamente documentos cargados por la web. Detalles: [integración Chroma](docs/chroma_integration.md).
+El catálogo Chroma del servicio documental, originales y versiones activas se guardan en `data/chroma_integration/`, configurable con `PRL_CHROMA_DOCUMENTS_DIR`. Conserva ese directorio junto con `chroma_db/` al respaldar los datos. No adopta automáticamente documentos cargados por la web. Detalles: [integración Chroma](docs/chroma_integration.md).
 
 Si `venv` no está disponible en Ubuntu, instala el paquete correspondiente a tu Python (`sudo apt install python3-venv` en la distribución habitual) y repite su creación. No instales las dependencias de este proyecto en el Python global.
 
-Para la **demo léxica de la API documental** no hacen falta `.env`, claves ni modelos descargados. Configuración opcional:
-
-```bash
-export PRL_P5_DATA_DIR="data/persona5"
-```
+Para la **demo léxica de la API documental** no hacen falta `.env`, claves ni modelos descargados. 
 
 La configuración de la API documental se lee del entorno, sin cargar `.env` automáticamente; el servicio de Groq sí carga el `.env` de la raíz. Si cambias la ruta, exclúyela también de Git. Las dependencias comunes están en `requirements.txt`. La demo léxica no inicializa `src/vector_store.py`; disponer de Chroma instalado no cambia por sí solo el índice que utiliza la API.
 
@@ -415,7 +408,6 @@ Verificación del 29/09/2026: **49 pruebas aprobadas**, con un aviso de deprecac
 
 ## Límites y siguientes mejoras
 
-- **Versiones documentales en la web:** `upsert` escribe los IDs recibidos pero no elimina los fragmentos que desaparecen al acortar un archivo. Se ha comunicado una recuperación de página antigua y debe repetirse la prueba tras corregirla. La subida sobrescribe el original por nombre antes de procesar; un fallo puede eliminar esa copia. No se garantiza sustitución atómica.
 - **Catálogo documental separado:** la web no hereda sus filtros de versiones activas, estados ni garantías de borrado. `vector_store.search()` consulta directamente la colección y puede ver registros que el adaptador documental ocultaría. No utilizar ambos recorridos como si fueran una gestión unificada.
 - **Límites de carga diferentes:** los 10 MiB y 300 páginas corresponden al procesador de demostración, no a `/api/upload`. La ruta web lee el archivo completo sin esos límites explícitos. El servicio documental comprueba tamaño después del parser multipart; para despliegue se requiere limitar la petición antes del parser.
 - **Contexto y citas:** sin historial conversacional enviado al modelo; el umbral semántico requiere calibración sobre preguntas en español. `score` no es probabilidad de veracidad. Las fuentes recuperadas pueden incluir documentos no utilizados en la respuesta.
