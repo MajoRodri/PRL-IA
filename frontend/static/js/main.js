@@ -400,18 +400,24 @@ function renderMarkdown(raw) {
   const flushList = () => { if (listTag) { out.push(`</${listTag}>`); listTag = null; } };
 
   const isSeparatorRow = (l) => /^\|[\s\-|:]+\|$/.test(l.trim());
+  const parseCells = (row) =>
+    row.trim().replace(/^\||\|$/g, '').split('|').map(c => applyInline(escapeHTML(c.trim())));
 
   const flushTable = () => {
     if (!tableRows.length) return;
     const rows = tableRows.filter(l => !isSeparatorRow(l));
     if (rows.length) {
-      out.push('<table class="md-table">');
-      rows.forEach((row, i) => {
-        const cells = row.trim().replace(/^\||\|$/g, '').split('|');
-        const tag = i === 0 ? 'th' : 'td';
-        out.push('<tr>' + cells.map(c => `<${tag}>${applyInline(escapeHTML(c.trim()))}</${tag}>`).join('') + '</tr>');
-      });
-      out.push('</table>');
+      const [head, ...body] = rows;
+      const headCells = parseCells(head).map(c => `<th>${c}</th>`).join('');
+      out.push(`<div class="md-table-wrap"><table class="md-table"><thead><tr>${headCells}</tr></thead>`);
+      if (body.length) {
+        out.push('<tbody>');
+        body.forEach(row => {
+          out.push(`<tr>${parseCells(row).map(c => `<td>${c}</td>`).join('')}</tr>`);
+        });
+        out.push('</tbody>');
+      }
+      out.push('</table></div>');
     }
     tableRows = [];
   };
@@ -430,8 +436,8 @@ function renderMarkdown(raw) {
     const trimmed = line.trim();
     const ulMatch = trimmed.match(/^[\-\*•]\s+(.+)/);
     const olMatch = trimmed.match(/^\d+[.)]\s+(.+)/);
-    const hMatch  = line.match(/^(#{1,3})\s+(.+)/);
-    const bqMatch = line.match(/^>\s*(.*)/);
+    const hMatch  = trimmed.match(/^(#{1,6})\s+(.+)/);
+    const bqMatch = trimmed.match(/^>\s*(.*)/);
     const isHR    = /^(\-{3,}|\*{3,}|_{3,})$/.test(trimmed);
 
     if (ulMatch) {

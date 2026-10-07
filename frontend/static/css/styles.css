@@ -799,6 +799,7 @@ button { font-family: var(--font); }
 .message__bubble p:last-child  { margin-bottom: 0; }
 
 /* Markdown tables */
+.md-table-wrap { overflow-x: auto; }
 .md-table {
   border-collapse: collapse;
   width: 100%;

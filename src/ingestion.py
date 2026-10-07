@@ -123,7 +123,7 @@ def _load_pdf(path: Path) -> list[Document]:
     try:
         reader = PdfReader(path)
         if reader.is_encrypted and not reader.decrypt(""):
-            raise IngestionError(f"El PDF esta cifrado y requiere contrasena: {path}")
+            raise IngestionError(f"El PDF está cifrado y requiere contraseña: {path}")
     except (OSError, PdfReadError, ValueError) as exc:
         raise IngestionError(f"No se pudo leer el PDF '{path}': {exc}") from exc
 
@@ -134,7 +134,7 @@ def _load_pdf(path: Path) -> list[Document]:
             text = clean_text(page.extract_text() or "")
         except Exception as exc:  # pypdf puede exponer errores de flujos PDF mal formados.
             raise IngestionError(
-                f"No se pudo extraer la pagina {page_number} de '{path}': {exc}"
+                f"No se pudo extraer la página {page_number} de '{path}': {exc}"
             ) from exc
         if not text:
             continue
@@ -162,7 +162,7 @@ def _read_text_file(path: Path) -> str:
         except UnicodeDecodeError:
             continue
     # latin-1 puede decodificar cualquier byte; esta salida es solo defensiva.
-    raise IngestionError(f"No se pudo detectar la codificacion de '{path}'")
+    raise IngestionError(f"No se pudo detectar la codificación de '{path}'")
 
 
 def _load_text(path: Path) -> list[Document]:
@@ -173,7 +173,7 @@ def _load_text(path: Path) -> list[Document]:
     except OSError as exc:
         raise IngestionError(f"No se pudo leer el archivo '{path}': {exc}") from exc
     if not text:
-        raise EmptyDocumentError(f"El documento esta vacio: {path}")
+        raise EmptyDocumentError(f"El documento está vacío: {path}")
     return [
         {
             "text": text,
