@@ -2,7 +2,9 @@
 
 Asistente documental de prevención de riesgos laborales para consultar información con fuentes verificables. Proyecto de equipo del bootcamp de IA/ML, Módulo V.
 
-**Estado documentado al incorporar `dev` (commit `4b0dbbe`, 30/09/2026):** se dispone de la ingesta y el chunking de persona 1, el almacenamiento vectorial de persona 2 y la gestión documental y recuperación independiente de persona 5. Su presencia en la misma rama no implica que estén conectados de extremo a extremo. La API de persona 5 continúa usando el procesador y el índice léxico de demostración. El adaptador Chroma preparado por separado aún no forma parte de este estado; la cadena RAG y la interfaz completa quedan pendientes de integración y verificación.
+**Estado revisado el 06/10/2026 sobre `dev`, commit `2030174`:** la aplicación web integra carga PDF/TXT, ingesta y chunking de P1, Chroma de P2 y respuestas con Groq de P3. Incluye el chat «Paco», fuentes visibles y controles de carga y consulta. También está disponible la API documental independiente de P5, en modo léxico o con Chroma. **La web no utiliza todavía el catálogo ni el recuperador de P5**: son dos recorridos distintos, con garantías diferentes.
+
+La revisión conserva la documentación existente y actualiza las conexiones, el arranque y los límites. Las correcciones de `feat/integration` aún no incorporadas a esta revisión de `dev` no se consideran funcionalidades verificadas.
 
 ## Problema y uso previsto
 
@@ -32,7 +34,9 @@ La documentación de apoyo se encuentra en `docs/integration.md`, `docs/guia_mar
 | Corpus e ingesta — persona 1 | `data/sources.json`, `scripts/download_corpus.py`, `src/ingestion.py` | Manifiesto de nueve fuentes del BOE/INSST; descarga de PDF; extracción y limpieza por página de PDF, TXT y Markdown |
 | Chunking — persona 1 | `src/chunking.py`, `scripts/evaluate_chunking.py`, `docs/chunking.md` | Fragmentación por página, metadatos y comparación experimental de tamaños y solapamientos |
 | Embeddings e índice — persona 2 | `src/vector_store.py`, `docs/vector_store.md` | Embeddings locales, colección persistente Chroma y búsqueda semántica básica |
-| Servicio y recuperación — persona 5 | `src/document_service.py`, `src/retrieval.py`, `src/api_documents.py` | Carga, catálogo, reindexación, eliminación y recuperación con filtros; API independiente con componentes demo |
+| Servicio y recuperación — persona 5 | `src/document_service.py`, `src/retrieval.py`, `src/api_documents.py` | Carga, catálogo, reindexación, eliminación y recuperación con filtros; API independiente con índice léxico o adaptador Chroma y procesador demo |
+| RAG y generación — persona 3 | `src/rag_chain.py`, `src/llm_service.py` | Recuperación semántica y generación mediante `ChatGroq`; citas y respuesta conversacional sin contexto |
+| API general e interfaz | `src/api.py`, `frontend/templates/`, `frontend/static/` | Web, chat, carga PDF/TXT y conexión con el RAG |
 
 ### Corpus, ingesta y chunking
 
@@ -86,23 +90,36 @@ Las pruebas de persona 2 utilizan mocks: verifican las llamadas y la
 transformación de datos, sin ejecutar Chroma real ni descargar el modelo.
 Detalles: [almacenamiento vectorial](docs/vector_store.md).
 
-### Conexiones aún pendientes
+### Conexiones actuales y separación de servicios
 
-- **P1 → P2:** el chunking entrega `metadata.chunk_id`, mientras que
-  `add_fragments()` requiere `id` en el nivel superior. Hace falta adaptar ese
-  contrato antes de indexar; no basta con pasar la lista directamente.
-- **P1 → P5:** adaptar la ingesta y el chunking al contrato `DocumentProcessor`,
-  conservando la identidad del documento, la categoría y las fuentes.
-- **P2 → P5:** adaptar el índice al contrato `DocumentIndex`, incluyendo filtros
-  antes del ranking, conversión de distancia, sustitución y borrado. La función
-  `search()` de P2 por sí sola no cubre estas operaciones.
-- **RAG e interfaz:** conectar el contexto con la generación y la presentación,
-  comprobar las citas y evaluar cuándo debe abstenerse el sistema.
+- **Web → P1 → P2:** `_index_document()` en `src/api.py` adapta `metadata.chunk_id` a los IDs de Chroma y guarda texto, nombre, página y sección mediante `upsert`.
+- **Web → P3 → P2:** `/api/query` llama a `answer_query()`, que utiliza `vector_store.search()` y Groq. No pasa por `Retriever` ni por `DocumentService` de P5.
+- **P2 → P5:** `ChromaDocumentIndex` ya conecta el servicio documental con la colección de P2, incluyendo filtros, generaciones activas, sustitución y borrado.
+- **P1 → P5:** sigue pendiente adaptar la ingesta y el chunking de P1 a `DocumentProcessor`. Ambos modos de la API P5 conservan `DemoProcessor`.
+- **P5 → web/RAG:** queda pendiente integrar el catálogo y sus garantías de visibilidad en el flujo principal. Compartir una colección no equivale a compartir el ciclo documental.
 
-La API P5 admite actualmente PDF con texto y TXT UTF-8. Que P1 soporte Markdown
-no amplía automáticamente los formatos admitidos por esa API.
+La web y la API P5 admiten PDF con texto y TXT. El soporte Markdown de P1 es una capacidad de la biblioteca de ingesta, no de las rutas de subida.
 
-## Arquitectura de la API documental de demostración
+### Flujo principal: aplicación web y RAG
+
+```mermaid
+flowchart TD
+    A["Chat y carga de archivos"] --> B["API general"]
+    B --> C["Ingesta y chunking P1"]
+    C --> D["Chroma y embeddings P2"]
+    B --> E["Cadena RAG P3"]
+    D --> E
+    E --> F["Groq: generación externa"]
+    F --> G["Respuesta y fuentes en el chat"]
+```
+
+La consulta admite `question` de 1 a 2000 caracteres y `k` de 1 a 20 (4 por defecto). La ruta activa usa `answer_query()`: conserva candidatos con distancia ≤ 0,5 y construye un prompt con referencias numeradas. Devuelve `answer`, `sources` (`document`, `page`, `chunk`) y `abstained`.
+
+Si no hay candidatos relevantes, genera una respuesta conversacional con otro prompt y sin fuentes; **no hay abstención determinista y `abstained` permanece en `false`**. La función alternativa `answer_question()` sí devuelve una respuesta fija sin contexto, pero no es la que invoca la API web. Las pruebas de esa función no validan por sí solas el comportamiento de `answer_query()`.
+
+El frontend envía cada pregunta de forma independiente, sin historial conversacional. Las tarjetas muestran nombre y página; no abren ni descargan el documento original. Las fuentes devueltas son los candidatos relevantes, no exclusivamente los que el modelo cita.
+
+## Arquitectura de la API documental independiente (P5)
 
 ```mermaid
 flowchart TD
@@ -114,14 +131,14 @@ flowchart TD
     E --> G
     C --> G
     G --> H[Fragmentos con fuentes]
-    H -. Integración pendiente .-> I[RAG del equipo]
+    H -. Conexión pendiente desde la web .-> I[RAG del equipo]
 ```
 
 - El **procesador** transforma un documento en fragmentos. El demo permite probar PDF con texto y TXT.
-- El **índice** guarda y busca fragmentos. El demo usa coincidencias de palabras, no embeddings.
+- El **índice** guarda y busca fragmentos: `SQLiteDemoIndex` usa coincidencias de palabras y `ChromaDocumentIndex` usa embeddings.
 - El **recuperador** selecciona el contexto por relevancia, filtros y estado documental.
 - El **servicio** coordina los pasos y registra qué documentos pueden consultarse.
-- La **API** expone esas funciones al frontend y al equipo.
+- La **API independiente** expone estas funciones al equipo; sus rutas no están montadas en `src/api.py`.
 
 SQLite sustituye un catálogo JSON plano para disponer de restricciones de unicidad y transacciones locales. No sustituye ChromaDB: el catálogo y la base vectorial tienen propósitos distintos. Los originales se guardan con UUID, nunca con una ruta recibida del cliente.
 
@@ -136,9 +153,17 @@ PRL-IA/
     retrieval.py             # persona 5: recuperación y contratos
     document_service.py      # persona 5: servicio y adaptadores demo
     api_documents.py         # persona 5: API independiente
-    rag_chain.py             # integración RAG pendiente de verificar
-    api.py                   # integración API general pendiente
-  frontend/                  # estructura del frontend del equipo
+    chroma_adapter.py        # P5: generaciones activas y filtros en Chroma
+    api_documents_chroma.py  # arranque de la API P5 con Chroma
+    llm_service.py           # configuración y llamadas a Groq
+    rag_chain.py             # recuperación + generación
+    api.py                   # web, /api/query y /api/upload
+  frontend/
+    templates/base.html
+    templates/index.html
+    static/css/styles.css
+    static/js/main.js
+    static/img/              # logotipo, icono y vídeo
   data/
     sources.json
     raw/                     # PDF locales excluidos; README versionado
@@ -160,9 +185,14 @@ PRL-IA/
     test_vector_store.py
     test_retrieval.py
     test_documents_api.py
+    test_chroma_adapter.py
+    test_llm_service.py
+    test_rag.py
+    test_query_api.py
     fixtures_retrieval.json
   docs/
     chunking.md
+    chroma_integration.md
     vector_store.md
     evaluation.md
     ethical_use.md
@@ -195,21 +225,56 @@ python -m pip install -r requirements.txt
 
 # Comprobar las dependencias
 python -m pip check
-python -m pytest tests/test_retrieval.py tests/test_documents_api.py -q
-python -m uvicorn src.api_documents:create_app --factory --host 127.0.0.1 --port 8005
+python -m pytest tests -q
 ```
 
-Abre <http://127.0.0.1:8005/docs>. El puerto 8005 permite probar este módulo sin ocupar el 8000 de la API general. Para detenerlo, pulsa `Ctrl+C`. Ejecuta un único proceso/worker: el bloqueo del servicio es local al proceso.
+### Arranque de la aplicación web
+
+Desde la raíz, crea `.env` a partir de `.env.example` **solo si no existe**:
+
+```bash
+[ -f .env ] || cp .env.example .env
+```
+
+Edita `.env` localmente y sustituye el marcador de `GROQ_API_KEY` por tu clave. No la incluyas en Git ni en capturas. El ejemplo versionado selecciona `GROQ_MODEL=openai/gpt-oss-120b`; si la variable no se define, el código utiliza `llama-3.3-70b-versatile`. El modelo efectivo depende de tu entorno. La generación requiere conexión y acceso al proveedor.
+
+```bash
+python -m uvicorn src.api:app --host 127.0.0.1 --port 8000
+```
+
+- Web: <http://127.0.0.1:8000/>.
+- API interactiva: <http://127.0.0.1:8000/docs>.
+- Detener: `Ctrl+C`.
+
+El primer arranque puede descargar MiniLM. Ejecuta desde la raíz para que `./chroma_db` sea siempre la misma ubicación. La web guarda archivos en `data/raw/`; descargar el corpus no lo indexa automáticamente.
+
+**Recorrido de demostración:** abre «Hacer una consulta», adjunta `data/examples/prevencion_demo.txt`, espera la confirmación y pregunta qué referencia menciona sobre trabajos en altura. Revisa respuesta y fuentes: el texto es sintético y no constituye un protocolo real. La interfaz permite ampliar, reducir y cerrar el chat, copiar respuestas y desplegar fuentes.
+
+### Arranque de la API documental P5
+
+Elige **uno** de estos modos en el puerto 8005:
+
+```bash
+# Índice léxico, sin Groq ni descarga de embeddings:
+python -m uvicorn src.api_documents:create_app --factory --host 127.0.0.1 --port 8005
+
+# Alternativa: índice Chroma con embeddings de P2, sin LLM:
+python -m uvicorn src.api_documents_chroma:create_app --factory --host 127.0.0.1 --port 8005
+```
+
+Abre <http://127.0.0.1:8005/docs> y <http://127.0.0.1:8005/health>. En el segundo modo debe aparecer `"index": "ChromaDocumentIndex"`. Usa un único proceso/worker y no ejecutes varias instancias escritoras sobre la misma colección.
+
+El catálogo Chroma de P5, originales y versiones activas se guardan en `data/persona5/chroma_integration/`, configurable con `PRL_CHROMA_DOCUMENTS_DIR`. Conserva ese directorio junto con `chroma_db/` al respaldar los datos. No adopta automáticamente documentos cargados por la web. Detalles: [integración Chroma](docs/chroma_integration.md).
 
 Si `venv` no está disponible en Ubuntu, instala el paquete correspondiente a tu Python (`sudo apt install python3-venv` en la distribución habitual) y repite su creación. No instales las dependencias de este proyecto en el Python global.
 
-No hacen falta `.env`, claves ni modelos descargados para la demo. Configuración opcional:
+Para la **demo léxica P5** no hacen falta `.env`, claves ni modelos descargados. Configuración opcional:
 
 ```bash
 export PRL_P5_DATA_DIR="data/persona5"
 ```
 
-No se carga `.env` automáticamente. Si cambias la ruta, exclúyela también de Git. Las dependencias comunes están en `requirements.txt`. La demo léxica no inicializa `src/vector_store.py`; disponer de Chroma instalado no cambia por sí solo el índice que utiliza la API.
+La configuración propia de P5 se lee del entorno, sin cargar `.env` automáticamente; el servicio de Groq sí carga el `.env` de la raíz. Si cambias la ruta, exclúyela también de Git. Las dependencias comunes están en `requirements.txt`. La demo léxica no inicializa `src/vector_store.py`; disponer de Chroma instalado no cambia por sí solo el índice que utiliza la API.
 
 ## Descargar el corpus y reproducir el benchmark de P1
 
@@ -229,7 +294,7 @@ pueden cambiar; los resultados registrados corresponden al corpus utilizado
 por el equipo en su ejecución. Descargar los documentos no los indexa
 automáticamente en Chroma ni en el catálogo de la API P5.
 
-## Demo de principio a fin — persona 5
+## Demo de principio a fin — persona 5 (modo léxico)
 
 Con el servidor arrancado, abre otra terminal en la raíz del proyecto:
 
@@ -244,11 +309,25 @@ curl -s -X POST http://127.0.0.1:8005/api/v1/retrieval/query \
   -H "Content-Type: application/json" -d '{"query":"salarios vacaciones"}'
 ```
 
-La primera carga devuelve `201`, un `document_id`, estado `indexed` y número de fragmentos. La consulta devuelve `sources` con texto, documento, página cuando exista y puntuación. La última devuelve `has_context: false` y `reason: no_relevant_context`. **No se genera ninguna respuesta con un LLM.** La persona 3 debe convertir la falta de contexto en una abstención explícita.
+La primera carga devuelve `201`, un `document_id`, estado `indexed` y número de fragmentos. La consulta devuelve `sources` con texto, documento, página cuando exista y puntuación. La última devuelve `has_context: false` y `reason: no_relevant_context`. **No se genera ninguna respuesta con un LLM.** Una futura conexión del RAG a esta API deberá respetar esa señal de falta de contexto.
 
 Repetir la misma carga devuelve `409`: el contenido ya está registrado aunque cambie el nombre. Consulta el listado para recuperar su ID. Puedes probar reindexación y eliminación desde `/docs`.
 
 ## Endpoints
+
+### Aplicación web — puerto 8000
+
+| Método | Ruta | Uso |
+|---|---|---|
+| GET | `/` | Página web y chat |
+| POST | `/api/upload` | Archivo multipart `file`: PDF o TXT; devuelve nombre, mensaje y número de fragmentos |
+| POST | `/api/query` | JSON con `question` y `k` opcional; devuelve respuesta y fuentes |
+| GET | `/docs` | Documentación interactiva de la API general |
+
+La web no ofrece rutas de catálogo, reindexación o borrado. Su subida no devuelve el `document_id` de P5 ni aplica su detección de duplicados por SHA-256. En esta versión rechaza extensiones con 400, errores de procesamiento con 500 y errores de consulta con 422/503.
+
+### API documental P5 — puerto 8005
+
 
 | Método | Ruta | Uso |
 |---|---|---|
@@ -285,15 +364,30 @@ Solo los documentos `indexed` participan en recuperación. Si falla una reindexa
 
 ## Pruebas y evaluación
 
-Para comprobar conjuntamente las pruebas incorporadas de P1, P2 y P5:
+Para ejecutar la suite completa, con el entorno activado y desde la raíz:
 
 ```bash
-python -m pytest tests/test_ingestion.py tests/test_chunking.py tests/test_evaluate_chunking.py tests/test_vector_store.py tests/test_retrieval.py tests/test_documents_api.py -q
+python -m pytest tests -q
+python -m pip check
 ```
 
-Este README no atribuye un resultado a esa ejecución conjunta: hay que registrar
-su salida tras resolver el merge. Las pruebas vectoriales de P2 usan mocks;
-no equivalen a una prueba semántica real ni a una integración completa.
+La suite abarca ingesta, chunking, evaluación, vector store, recuperación, API documental, adaptador Chroma, servicio LLM, RAG y API de consulta. P2 y Groq se prueban con dobles; los tests del adaptador usan Chroma real con embeddings deterministas. Algunos módulos inicializan MiniLM al importar `vector_store`, por lo que la recogida de tests puede requerir el modelo en caché. No se necesitan llamadas reales a Groq para validar los casos simulados.
+
+**Evidencia y alcance:** María comunicó una ejecución completa satisfactoria el 06/10/2026; no se dispone aquí de su recuento final. El resultado histórico de 83 pruebas corresponde a siete módulos antes de ampliar la integración. Esta revisión del README no vuelve a ejecutar la suite ni presenta esos números como el total actual. Las pruebas de `test_rag.py` se centran en `answer_question()` y las de `/api/query` sustituyen `answer_query`: queda pendiente ampliar cobertura de la ruta RAG real y de la sustitución de archivos en `/api/upload`.
+
+### Pruebas manuales comunicadas el 06/10/2026
+
+| Caso | Resultado observado |
+|---|---|
+| Página, imágenes, vídeo, navegación y controles del chat | Correctos en el equipo local |
+| Entradas vacías y envíos repetidos con Enter | No se observaron respuestas duplicadas; vacío bloqueado |
+| TXT/PDF sintéticos y consulta de dato conocido | Respuestas correctas; referencia a página 2 del PDF |
+| Datos ausentes y pregunta ajena a PRL | No inventó el dato en los casos probados; redirigió la consulta ajena |
+| PDF inválido, TXT vacío y CSV | Rechazados, con mensajes apropiados al caso |
+| Reinicio y caída del servidor | Documento consultable tras reinicio; error de conexión y recuperación sin recargar |
+| Ventana estrecha | Sin problemas comunicados |
+
+Estas pruebas sintéticas no acreditan exactitud normativa ni seguridad de recomendaciones reales. La continuidad conversacional no está implementada como historial enviado al modelo.
 
 Para repetir solo la evaluación de la demo P5:
 
@@ -305,25 +399,30 @@ python -m scripts.evaluate_retrieval
 
 Verificación del 29/09/2026: **49 pruebas aprobadas**, con un aviso de deprecación del cliente HTTP de pruebas, detallado en [evaluación](docs/evaluation.md). El corpus sintético obtiene Recall@3 = 0,833 en 6 consultas con fuente y contexto vacío correcto en 2/2 consultas sin fuente. Estos datos son pruebas del baseline, no una validación de seguridad o exactitud del RAG.
 
-## Checklist del briefing
+## Checklist de implementación y evidencias
 
-| Requisito | Evidencia de esta entrega | Estado |
+| Requisito | Evidencia | Estado actual |
 |---|---|---|
-| Recuperar k fragmentos con metadatos | `Retriever`, API y tests | Verificado con índice léxico demo |
-| Filtros y relevancia | Metadatos, umbral, orden y deduplicación | Implementado y probado |
-| Carga y gestión documental | Catálogo, originales, reindexación y eliminación | Implementado y probado |
-| Chunking justificado | P1: 1000/200 caracteres, benchmark BM25 y `docs/chunking.md` | Implementado y evaluado por P1; conexión a la API P5 pendiente |
-| Embeddings y base vectorial persistente | P2: MiniLM, Chroma y `docs/vector_store.md` | Implementado en P2; conexión a P5 y evaluación semántica pendientes |
-| Orquestación LangChain/LlamaIndex | Contrato de contexto | Pendiente de P3 |
-| Respuestas fundamentadas y abstención | Se informa si hay contexto | Evaluación del LLM pendiente |
-| Interfaz y fuentes visibles | API entrega fuentes | Integración visual pendiente |
-| Trabajo colaborativo | Aportaciones de P1, P2 y P5 reunidas en la rama de trabajo | Cierre del merge, pruebas conjuntas y revisión pendientes |
-| Ética y privacidad | `docs/ethical_use.md` | Riesgos documentados; controles productivos pendientes |
+| Recuperación de fragmentos y fuentes | `vector_store.py`, `rag_chain.py`, `retrieval.py` | Dos recorridos: web semántica y recuperación gestionada P5 |
+| Filtros y relevancia | `retrieval.py`, `chroma_adapter.py` y tests | Implementados en P5; no expuestos en el chat |
+| Gestión documental | `document_service.py`, `/api/v1/documents` | Catálogo, reindexación y borrado en API independiente |
+| Chunking justificado | P1, benchmark BM25, `docs/chunking.md` | Usado por la web; P5 conserva procesador demo |
+| Embeddings persistentes | MiniLM y Chroma | Conectados a web y adaptador P5; evaluación semántica amplia pendiente |
+| Generación con LLM | `ChatGroq`, `llm_service.py`, `rag_chain.py` | Integrada; salida requiere revisión humana |
+| Fuentes visibles | Chat y respuesta JSON | Nombre y página visibles; sin apertura del original ni validación automática de citas |
+| Abstención | Prompts y señales P5 | Casos manuales correctos; web sin garantía determinista |
+| Ética y privacidad | `docs/ethical_use.md` y límites de este README | Documentados; controles de producción pendientes |
 
-## Límites y siguiente integración
+## Límites y siguientes mejoras
 
-Prototipo local, sin autenticación, autorización por documento, OCR ni análisis antimalware. PDF: máximo 300 páginas y 10 MiB; TXT UTF-8. No debe exponerse públicamente ni usarse con información sensible. El límite de tamaño se comprueba tras el parser multipart; para despliegue se necesita un límite de petición previo, aislamiento del parser y control de recursos. La demo recorre todos los fragmentos. La implementación vectorial de P2 ya está disponible, pero no está conectada a esta API en el estado documentado.
+- **Versiones documentales en la web:** `upsert` escribe los IDs recibidos pero no elimina los fragmentos que desaparecen al acortar un archivo. Se ha comunicado una recuperación de página antigua y debe repetirse la prueba tras corregirla. La subida sobrescribe el original por nombre antes de procesar; un fallo puede eliminar esa copia. No se garantiza sustitución atómica.
+- **Catálogo P5 separado:** la web no hereda sus filtros de versiones activas, estados ni garantías de borrado. `vector_store.search()` consulta directamente la colección y puede ver registros que el adaptador P5 ocultaría. No utilizar ambos recorridos como si fueran una gestión unificada.
+- **Límites de carga diferentes:** los 10 MiB y 300 páginas corresponden al procesador demo P5, no a `/api/upload`. La ruta web lee el archivo completo sin esos límites explícitos. P5 comprueba tamaño después del parser multipart; para despliegue se requiere limitar la petición antes del parser.
+- **Contexto y citas:** sin historial conversacional enviado al modelo; el umbral semántico requiere calibración sobre preguntas en español. `score` no es probabilidad de veracidad. Las fuentes recuperadas pueden incluir documentos no utilizados en la respuesta.
+- **Interfaz:** revisar Markdown en nombres, fidelidad de copia, mensajes específicos para cargas inválidas y numeración de tarjetas. La apertura del original es una mejora aún no implementada. Hay cambios en `feat/integration` pendientes de incorporar y verificar en `dev`.
+- **Privacidad:** los embeddings se calculan localmente, pero la pregunta y los fragmentos seleccionados se envían a Groq para generar la respuesta. No hay anonimización automática. Excluir archivos de Git no impide su transmisión al proveedor.
+- **Uso local:** sin autenticación, permisos por documento, aislamiento por empresa, OCR ni análisis antimalware. Mantener el prototipo en `127.0.0.1` y usar datos sintéticos o autorizados, sin información sensible. No sustituye al personal de prevención.
 
-La selección revisa hasta `5*k` candidatos (máximo 100), por lo que duplicados o documentos ocultos pueden dar menos de k resultados aun existiendo otros válidos. El equipo puede ampliar el contrato con paginación de candidatos antes de usar corpus grandes. Reindexar o eliminar registros fallidos evita acumularlos.
+En P5, la selección revisa hasta `5*k` candidatos (máximo 100); duplicados o documentos ocultos pueden producir menos de k resultados. El adaptador publica generaciones activas y filtra las antiguas; una limpieza fallida puede dejar datos físicos no visibles. No existe una transacción distribuida SQLite/Chroma ni un recolector global de fragmentos huérfanos.
 
-Integración: [contratos](docs/integration.md). Para comprender y defender tu parte: [guía de María](docs/guia_maria.md). Las implementaciones de P1 y P2 incorporadas desde `dev` conservan la autoría del equipo. La próxima fase es conectar sus contratos con P5 y comprobar el flujo completo antes de incorporar generación con LLM.
+Documentación de apoyo: [contratos P5](docs/integration.md), [integración Chroma](docs/chroma_integration.md), [evaluación](docs/evaluation.md), [uso ético](docs/ethical_use.md), [guía de María](docs/guia_maria.md) y [Git en WSL](docs/github_wsl.md). Las guías históricas pueden describir etapas anteriores; para los modos de arranque actuales utiliza este README.
