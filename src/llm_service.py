@@ -54,15 +54,15 @@ def get_llm() -> ChatGroq:
         ) from exc
 
 
-def generate_response(prompt: str) -> str:
+def generate_response_with_metrics(prompt: str) -> dict:
     """
-    Envía un prompt al modelo y devuelve el texto generado.
+    Envía un prompt al modelo y devuelve texto y consumo comunicado.
 
     Args:
         prompt: Texto que se enviará al modelo.
 
     Returns:
-        Respuesta generada por el LLM.
+        Diccionario con answer y metrics.
     """
     if not isinstance(prompt, str) or not prompt.strip():
         raise ValueError("El prompt no puede estar vacío.")
@@ -71,8 +71,35 @@ def generate_response(prompt: str) -> str:
 
     try:
         response = llm.invoke(prompt)
-        return response.content
+        return {"answer": response.content, "metrics": _token_usage(response)}
     except Exception as exc:
         raise RuntimeError(
             "Error al solicitar una respuesta a Groq."
         ) from exc
+
+
+def _token_usage(response) -> dict:
+    """Uso comunicado por el proveedor; None significa dato no disponible."""
+    usage = getattr(response, "usage_metadata", None)
+    metadata = getattr(response, "response_metadata", None)
+    usage = usage if isinstance(usage, dict) else {}
+    metadata = metadata if isinstance(metadata, dict) else {}
+    fallback = metadata.get("token_usage") or {}
+    fallback = fallback if isinstance(fallback, dict) else {}
+
+    def count(primary, legacy):
+        for value in (usage.get(primary), fallback.get(legacy)):
+            if type(value) is int and value >= 0:
+                return value
+        return None
+
+    return {
+        "input_tokens": count("input_tokens", "prompt_tokens"),
+        "output_tokens": count("output_tokens", "completion_tokens"),
+        "total_tokens": count("total_tokens", "total_tokens"),
+    }
+
+
+def generate_response(prompt: str) -> str:
+    """Interfaz original: devuelve solo texto para los consumidores existentes."""
+    return generate_response_with_metrics(prompt)["answer"]
