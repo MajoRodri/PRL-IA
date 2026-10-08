@@ -417,4 +417,4 @@ Verificación del 29/09/2026: **49 pruebas aprobadas**, con un aviso de deprecac
 
 En el servicio documental, la selección revisa hasta `5*k` candidatos (máximo 100); duplicados o documentos ocultos pueden producir menos de k resultados. El adaptador publica generaciones activas y filtra las antiguas; una limpieza fallida puede dejar datos físicos no visibles. No existe una transacción distribuida SQLite/Chroma ni un recolector global de fragmentos huérfanos.
 
-Documentación de apoyo: [contratos de la API documental](docs/integration.md), [integración Chroma](docs/chroma_integration.md), [evaluación](docs/evaluation.md), [uso ético](docs/ethical_use.md), [guía de María](docs/guia_maria.md) y [Git en WSL](docs/github_wsl.md). Las guías históricas pueden describir etapas anteriores; para los modos de arranque actuales utiliza este README.
+Documentación de apoyo: [integración Chroma](docs/chroma_integration.md), [evaluación](docs/evaluation.md), [uso ético](docs/ethical_use.md), [guía de retrieval](docs/guia_retrieval.md). Las guías históricas pueden describir etapas anteriores; para los modos de arranque actuales utiliza este README.
