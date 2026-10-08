@@ -65,7 +65,7 @@ La comparación se ejecutó sobre las **9 fuentes oficiales** del corpus, que co
 
 Las preguntas están en `data/evaluation/chunking_questions.json`. Antes de ejecutar el benchmark, el script verifica que todas las fuentes, páginas y frases de evidencia existan realmente en el corpus.
 
-Para aislar el efecto del chunking de la implementación futura de Persona 2, se utilizó recuperación léxica BM25 y `top_k=5`. Las tres configuraciones se evaluaron sobre las mismas páginas y preguntas mediante `scripts/evaluate_chunking.py`.
+Para aislar el efecto del chunking de la implementación futura, se utilizó recuperación léxica BM25 y `top_k=5`. Las tres configuraciones se evaluaron sobre las mismas páginas y preguntas mediante `scripts/evaluate_chunking.py`.
 
 ### Métricas
 
@@ -122,8 +122,6 @@ Los números de página PDF son de base uno. TXT y Markdown usan página 1 para 
 - Las tablas complejas y maquetaciones a varias columnas pueden perder parte de su estructura al extraerse con `pypdf`.
 - Los encabezados y pies repetidos se conservan por defecto: eliminarlos sin comparar páginas puede borrar contenido legal válido.
 - La detección de secciones es heurística y debe considerarse metadato opcional.
-
-Cuando Persona 2 tenga disponible el modelo de embeddings y ChromaDB, debe repetirse el mismo conjunto de preguntas con el retriever semántico. La configuración solo debería cambiar si esa evaluación contradice de forma clara estos resultados.
 
 ## Verificación automatizada
 

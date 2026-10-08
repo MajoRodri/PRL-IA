@@ -2,7 +2,7 @@
 
 ## Papel de este documento en el flujo
 
-Este archivo explica las decisiones tecnicas de la parte de Persona 2: como se
+Este archivo explica las decisiones tecnicas de como se
 generan los embeddings, como se persisten en la base vectorial y como se
 resuelve la busqueda semantica sobre los fragmentos ya troceados.
 

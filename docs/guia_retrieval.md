@@ -1,5 +1,3 @@
-# Tu parte del proyecto, explicada paso a paso
-
 ## La idea
 
 Imagina una biblioteca. Los documentos son libros; el procesamiento los divide en fichas; el índice ayuda a encontrarlas; el recuperador elige las fichas útiles para una pregunta. El LLM del equipo redactará después usando esas fichas. Tu parte decide qué entra en esa biblioteca, mantiene su estado y entrega contexto con procedencia.
@@ -51,10 +49,4 @@ Si ya lo cargaste antes, el 409 es esperado. Consulta `GET /api/v1/documents` pa
 
 ## Cómo contar el resultado con honestidad
 
-«He desarrollado la gestión documental y la selección de contexto de forma independiente. Puedo cargar, listar, reindexar y eliminar documentos, y recuperar fragmentos con fuentes y filtros. He probado los fallos y la persistencia. El buscador actual es un baseline léxico; la integración con los embeddings del equipo se hace mediante un contrato. La evaluación sintética detecta que los sinónimos son una limitación. La fidelidad del LLM se evaluará cuando integremos el RAG».
-
-No digas que ya están integrados Chroma, LangChain, el modelo ni la interfaz: no forman parte de la evidencia actual.
-
-## Orden recomendado de coordinación
-
-Primero comparte `docs/integration.md` con P1 y P2 y acordad sus firmas. Después, P3 incluye el router y usa la misma instancia del servicio para recuperar. Por último, P4 consume la carga y las fuentes en la interfaz. Mantén README y evaluación actualizados con lo que realmente ejecutéis.
+Hemos desarrollado la gestión documental y la selección de contexto de forma independiente. Puede cargar, listar, reindexar y eliminar documentos, y recuperar fragmentos con fuentes y filtros. Hemos probado los fallos y la persistencia. El buscador actual es un baseline léxico; la integración con los embeddings del equipo se hace mediante un contrato. La evaluación sintética detecta que los sinónimos son una limitación. La fidelidad del LLM se evaluará cuando integremos el RAG.
