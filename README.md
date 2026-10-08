@@ -202,6 +202,18 @@ PRL-IA/
   README.md
 ```
 
+## Ejecutar con Docker
+
+La imagen publicada en Docker Hub incluye todas las dependencias y el índice vectorial precargado. Solo necesitas Docker instalado y una clave de Groq.
+
+```bash
+docker run -e GROQ_API_KEY=tu_clave -p 8000:8000 majorodri/prl-ia:latest
+```
+
+Abre <http://localhost:8000>. No se requiere entorno virtual ni instalación de dependencias.
+
+---
+
 ## Instalar y ejecutar en Ubuntu/WSL
 
 Comprobado con Python 3.12. Las instrucciones se ejecutan en Ubuntu, no en PowerShell. Los comandos parten de una copia del repositorio con las aportaciones del equipo incorporadas. Si el entorno ya existe y las dependencias están instaladas, basta con activarlo; no hace falta recrearlo ni reinstalarlo por actualizar la documentación.
