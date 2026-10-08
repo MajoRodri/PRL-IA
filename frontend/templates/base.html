@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}PreventIA - Consulta normativa de riesgos laborales con IA{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="{{ url_for('static', path='img/icon.png') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', path='css/styles.css') }}?v=4" />
+  {% block head %}{% endblock %}
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="container navbar__inner">
+      <a href="/" class="navbar__brand">
+        <img src="{{ url_for('static', path='img/logo.png') }}" alt="PRL Assistant" class="navbar__logo" />
+      </a>
+      <nav class="navbar__nav" aria-label="Navegación principal">
+        <a href="#como-funciona" class="navbar__link">Cómo funciona</a>
+        <a href="#documentos" class="navbar__link">Documentos</a>
+        <a href="#chat" class="btn btn--primary btn--sm">Consultar ahora</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p class="footer__disclaimer">
+        PreventIA es una herramienta informativa. No sustituye a técnicos de prevención ni a protocolos oficiales.
+      </p>
+      <p class="footer__copy">Proyecto académico · Módulo V AI Engineering</p>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" onerror="window.lucide=null"></script>
+  <script src="{{ url_for('static', path='js/main.js') }}?v=4"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>
