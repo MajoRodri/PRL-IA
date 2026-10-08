@@ -186,9 +186,9 @@ chatForm.addEventListener('submit', async (e) => {
     removeLoading(loadingId);
 
     if (data.abstained) {
-      appendMessage('assistant', 'No he encontrado información suficiente en los documentos disponibles para responder a esta consulta.', []);
+      appendMessage('assistant', 'No he encontrado información suficiente en los documentos disponibles para responder a esta consulta.', [], data.metrics);
     } else {
-      appendMessage('assistant', data.answer, data.sources ?? []);
+      appendMessage('assistant', data.answer, data.sources ?? [], data.metrics);
     }
   } catch {
     removeLoading(loadingId);
@@ -298,7 +298,30 @@ function removeWelcome() {
   document.getElementById('chatWelcome')?.remove();
 }
 
-function appendMessage(role, text, sources = []) {
+function renderMetrics(metrics) {
+  if (!metrics || typeof metrics !== 'object') return '';
+  const tokens = value => Number.isInteger(value) && value >= 0
+    ? value.toLocaleString('es-ES') : 'No disponible';
+  const latency = typeof metrics.server_latency_ms === 'number'
+    && Number.isFinite(metrics.server_latency_ms) && metrics.server_latency_ms >= 0
+    ? (metrics.server_latency_ms / 1000).toLocaleString('es-ES', {
+        minimumFractionDigits: 2, maximumFractionDigits: 2,
+      }) + ' s' : 'No disponible';
+  return `<details class="message__metrics">
+    <summary class="message__sources-summary">${ICON.chevron} Consumo y tiempo</summary>
+    <dl class="message__metrics-grid">
+      <div><dt>Tokens de entrada</dt><dd>${tokens(metrics.input_tokens)}</dd></div>
+      <div><dt>Tokens de salida</dt><dd>${tokens(metrics.output_tokens)}</dd></div>
+      <div><dt>Total de tokens</dt><dd>${tokens(metrics.total_tokens)}</dd></div>
+      <div><dt>Tiempo del servidor</dt><dd>${latency}</dd></div>
+    </dl>
+    <p class="message__metrics-note">Entrada: instrucciones, pregunta y contexto enviado al modelo.
+    Tiempo: búsqueda y generación, sin el trayecto por Internet hasta tu navegador.
+    Consumo comunicado por el proveedor para esta respuesta.</p>
+  </details>`;
+}
+
+function appendMessage(role, text, sources = [], metrics = null) {
   const el = document.createElement('div');
   el.className = `message message--${role}`;
 
@@ -328,6 +351,7 @@ function appendMessage(role, text, sources = []) {
     <div class="message__body">
       <div class="message__bubble">${bubbleContent}${copyBtn}</div>
       ${sourcesHTML}
+      ${role === 'assistant' ? renderMetrics(metrics) : ''}
     </div>`;
 
   chatMessages.appendChild(el);
