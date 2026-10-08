@@ -1,5 +1,6 @@
 import asyncio
 import logging
+from time import perf_counter
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
@@ -98,8 +99,14 @@ def _index_document(path: Path) -> int:
 # ── API endpoints ─────────────────────────────────────────────
 @app.post("/api/query")
 async def query(body: QueryRequest):
+    started = perf_counter()
     try:
         result = answer_query(body.question, k=body.k)
+        result = dict(result)
+        result["metrics"] = {
+            **(result.get("metrics") or {}),
+            "server_latency_ms": round((perf_counter() - started) * 1000, 2),
+        }
         return JSONResponse(result)
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc

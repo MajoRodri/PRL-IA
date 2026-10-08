@@ -30,7 +30,10 @@ def test_query_success(monkeypatch):
     )
 
     assert response.status_code == 200
-    assert response.json() == expected
+    data = response.json()
+    metrics = data.pop("metrics")
+    assert data == expected
+    assert metrics["server_latency_ms"] >= 0
 
 
 def test_query_no_relevant_docs(monkeypatch):

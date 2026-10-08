@@ -1129,3 +1129,19 @@ h5.md-heading { font-size: 0.88em; }
   .features__grid { grid-template-columns: 1fr; }
   .documents__grid { grid-template-columns: 1fr; }
 }
+
+
+/* Métricas por respuesta, desplegable accesible mediante teclado. */
+.message__metrics { margin-top: 10px; }
+.message__metrics[open] > summary svg { transform: rotate(180deg); }
+.message__metrics > summary:focus-visible {
+  outline: 2px solid var(--navy); outline-offset: 4px; border-radius: 4px;
+}
+.message__metrics-grid {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px; margin: 10px 0; padding: 12px;
+  background: #f0f4ff; border-radius: 12px; color: #1a3562;
+}
+.message__metrics-grid dt { font-size: 12px; }
+.message__metrics-grid dd { margin: 4px 0 0; font-size: 15px; font-weight: 600; }
+.message__metrics-note { font-size: 12px; line-height: 1.5; color: #64748b; }

@@ -8,7 +8,7 @@ Responsable: Persona 3 — RAG y API.
 from typing import Callable
 
 from src import vector_store
-from src.llm_service import generate_response
+from src.llm_service import generate_response, generate_response_with_metrics
 
 
 # Respuesta estática cuando no hay documentación relevante (usada en tests).
@@ -143,8 +143,9 @@ def answer_query(question: str, k: int = 8) -> dict:
 
     # No hits at all → pure conversational (empty collection or off-topic greeting)
     if not hits:
-        answer = generate_response(_NO_CONTEXT_PROMPT.format(question=question.strip()))
-        return {"answer": answer, "sources": [], "abstained": False}
+        generation = generate_response_with_metrics(_NO_CONTEXT_PROMPT.format(question=question.strip()))
+        return {"answer": generation["answer"], "sources": [], "abstained": False,
+                "metrics": generation["metrics"]}
 
     # Some hits exist but none crossed the threshold → use best k=4 anyway so RAG
     # can still answer PRL questions that were diluted by a greeting prefix.
@@ -154,10 +155,11 @@ def answer_query(question: str, k: int = 8) -> dict:
     prompt = _build_prompt(question.strip(), context)
 
     try:
-        answer = generate_response(prompt)
+        generation = generate_response_with_metrics(prompt)
     except Exception as exc:
         raise RuntimeError("Error al generar la respuesta del asistente.") from exc
 
+    answer = generation["answer"]
     if not isinstance(answer, str) or not answer.strip():
         raise RuntimeError("El modelo no ha generado una respuesta válida.")
 
@@ -170,4 +172,5 @@ def answer_query(question: str, k: int = 8) -> dict:
         for h in rag_hits
     ]
 
-    return {"answer": answer.strip(), "sources": sources, "abstained": False}
+    return {"answer": answer.strip(), "sources": sources, "abstained": False,
+            "metrics": generation["metrics"]}
